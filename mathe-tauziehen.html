@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mathe-Tauziehen</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap');
+
+:root {
+  --red:#e74c3c; --red-d:#c0392b; --red-l:#ff8a80;
+  --blue:#2980b9; --blue-d:#1a5276; --blue-l:#82cfff;
+  --gold:#f1c40f; --gold-d:#c49000;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;}
+body{
+  font-family:'Nunito',sans-serif;
+  background:linear-gradient(160deg,#1a237e,#1565c0);
+  display:flex;flex-direction:column;align-items:center;
+  user-select:none;
+}
+
+/* ══════════ SETUP SCREEN ══════════ */
+#setup-screen{
+  position:fixed;inset:0;z-index:200;
+  background:linear-gradient(160deg,#0d1b6b,#1565c0);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:20px;gap:0;
+}
+#setup-screen h1{
+  font-family:'Fredoka One',sans-serif;
+  font-size:clamp(1.8rem,5vw,3rem);
+  color:var(--gold);
+  text-shadow:3px 3px 0 #7d5200,0 0 40px rgba(241,196,15,.4);
+  letter-spacing:3px;margin-bottom:6px;text-align:center;
+}
+.setup-sub{color:rgba(255,255,255,.6);font-size:.9rem;margin-bottom:24px;text-align:center;}
+#setup-box{
+  background:rgba(255,255,255,.1);backdrop-filter:blur(16px);
+  border:2px solid rgba(255,255,255,.2);border-radius:24px;
+  padding:28px 32px;width:min(500px,94vw);
+  display:flex;flex-direction:column;gap:14px;
+}
+.setup-label{
+  color:rgba(255,255,255,.75);font-size:.75rem;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;display:block;
+}
+#topic-input{
+  width:100%;padding:11px 15px;border-radius:13px;
+  border:2px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.14);color:#fff;
+  font-family:'Nunito',sans-serif;font-size:1rem;font-weight:600;outline:none;
+  transition:border .2s;
+}
+#topic-input::placeholder{color:rgba(255,255,255,.35);}
+#topic-input:focus{border-color:var(--gold);}
+
+#upload-zone{
+  border:2.5px dashed rgba(255,255,255,.28);border-radius:15px;
+  padding:18px 14px;text-align:center;cursor:pointer;
+  transition:border .2s,background .2s;background:rgba(255,255,255,.06);
+  position:relative;
+}
+#upload-zone:hover{border-color:var(--gold);background:rgba(241,196,15,.07);}
+#upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+#upload-zone .upload-icon{font-size:2rem;margin-bottom:5px;}
+#upload-zone p{color:rgba(255,255,255,.55);font-size:.82rem;line-height:1.4;}
+#upload-zone p strong{color:rgba(255,255,255,.85);}
+#img-preview{display:none;width:100%;max-height:110px;object-fit:cover;border-radius:10px;margin-top:8px;}
+
+#setup-status{color:rgba(255,255,255,.6);font-size:.82rem;text-align:center;min-height:18px;}
+
+#start-btn{
+  font-family:'Fredoka One',sans-serif;font-size:1.4rem;
+  padding:14px;border:none;border-radius:15px;cursor:pointer;
+  background:var(--gold);color:#7d4200;
+  box-shadow:0 5px 0 var(--gold-d);
+  transition:transform .1s,box-shadow .1s;letter-spacing:1px;width:100%;
+}
+#start-btn:hover{transform:translateY(-2px);}
+#start-btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--gold-d);}
+
+/* ══════════ GAME SCREEN ══════════ */
+#game-screen{
+  display:none;flex-direction:column;align-items:center;
+  width:100%;height:100%;
+}
+
+/* Header */
+#header{
+  width:100%;max-width:980px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 14px 2px;flex-shrink:0;
+}
+#header h1{
+  font-family:'Fredoka One',sans-serif;font-size:clamp(1.1rem,2.5vw,1.7rem);
+  color:var(--gold);text-shadow:2px 2px 0 #7d5200;letter-spacing:2px;
+}
+#score-display{display:flex;gap:8px;}
+.score-box{
+  font-family:'Fredoka One',sans-serif;font-size:.95rem;
+  padding:3px 13px;border-radius:14px;white-space:nowrap;
+}
+.score-box.red{background:var(--red);color:#fff;box-shadow:0 2px 0 var(--red-d);}
+.score-box.blue{background:var(--blue);color:#fff;box-shadow:0 2px 0 var(--blue-d);}
+
+/* Task */
+#task-area{
+  width:100%;max-width:980px;
+  background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
+  border:2px solid rgba(255,255,255,.2);border-radius:16px;
+  padding:8px 18px;margin:0 auto 3px;text-align:center;flex-shrink:0;
+}
+#task-context{font-size:.7rem;color:rgba(255,255,255,.5);letter-spacing:1.5px;text-transform:uppercase;font-weight:700;margin-bottom:1px;}
+#task-text{
+  font-family:'Fredoka One',sans-serif;
+  font-size:clamp(1.3rem,3.5vw,1.9rem);
+  color:#fff;text-shadow:1px 1px 5px rgba(0,0,0,.3);letter-spacing:2px;min-height:1.2em;
+}
+#task-text.loading{animation:pulse 1s ease-in-out infinite;}
+
+/* Canvas */
+#game-canvas-wrap{
+  width:100%;max-width:980px;
+  flex:1;min-height:0;position:relative;
+}
+canvas{display:block;width:100%;height:100%;}
+
+/* ══════════ INPUT + NUMPAD ══════════ */
+#input-row{
+  width:100%;max-width:980px;
+  display:flex;gap:7px;padding:3px 8px 7px;flex-shrink:0;
+}
+.team-panel{
+  flex:1;background:rgba(255,255,255,.1);
+  border:2px solid rgba(255,255,255,.15);
+  border-radius:16px;padding:7px 8px;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.team-panel.red{border-color:rgba(231,76,60,.35);}
+.team-panel.blue{border-color:rgba(41,128,185,.35);}
+
+.team-label{
+  font-family:'Fredoka One',sans-serif;font-size:.88rem;
+  padding:2px 11px;border-radius:9px;letter-spacing:.4px;
+}
+.team-label.red{background:var(--red);color:#fff;box-shadow:0 2px 0 var(--red-d);}
+.team-label.blue{background:var(--blue);color:#fff;box-shadow:0 2px 0 var(--blue-d);}
+
+.answer-row{display:flex;gap:5px;width:100%;}
+.answer-input{
+  flex:1;font-family:'Fredoka One',sans-serif;font-size:1.2rem;
+  padding:6px 8px;border-radius:9px;border:2.5px solid transparent;
+  outline:none;text-align:center;
+  background:rgba(255,255,255,.92);color:#222;
+  transition:border .15s,box-shadow .15s;
+  caret-color:transparent; /* readonly, numpad only */
+}
+.answer-input.red:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(231,76,60,.2);}
+.answer-input.blue:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(41,128,185,.2);}
+.answer-input.correct{background:#c8e6c9;border-color:#43a047;animation:flashGreen .4s;}
+.answer-input.wrong{background:#ffcdd2;border-color:#e53935;animation:shake .35s;}
+
+.submit-btn{
+  font-family:'Fredoka One',sans-serif;font-size:1.1rem;
+  padding:6px 12px;border:none;border-radius:9px;cursor:pointer;
+  transition:transform .1s,box-shadow .1s;
+}
+.submit-btn:active{transform:translateY(2px);}
+.submit-btn.red{background:var(--red);color:#fff;box-shadow:0 3px 0 var(--red-d);}
+.submit-btn.blue{background:var(--blue);color:#fff;box-shadow:0 3px 0 var(--blue-d);}
+
+/* NUMPAD */
+.numpad{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:3px;width:100%;
+}
+.nk{
+  font-family:'Fredoka One',sans-serif;font-size:.95rem;
+  padding:6px 3px;border:none;border-radius:8px;cursor:pointer;
+  background:rgba(255,255,255,.88);color:#333;
+  box-shadow:0 2px 0 rgba(0,0,0,.18);
+  transition:transform .07s,filter .07s;touch-action:manipulation;
+}
+.nk:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(0,0,0,.18);}
+.nk.op{background:rgba(255,255,255,.55);color:#444;}
+.nk.accent-red{background:var(--red);color:#fff;box-shadow:0 2px 0 var(--red-d);}
+.nk.accent-blue{background:var(--blue);color:#fff;box-shadow:0 2px 0 var(--blue-d);}
+.nk.del{background:rgba(200,200,200,.7);color:#555;}
+
+.feedback-msg{
+  font-size:.74rem;font-weight:700;height:15px;letter-spacing:.2px;
+}
+.feedback-msg.red{color:var(--red-l);}
+.feedback-msg.blue{color:var(--blue-l);}
+
+/* ══════════ WINNER ══════════ */
+#winner-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);
+  z-index:300;align-items:center;justify-content:center;
+}
+#winner-overlay.show{display:flex;}
+#winner-box{
+  background:#fff;border-radius:26px;padding:38px 52px;
+  text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);
+  animation:popIn .4s cubic-bezier(.34,1.56,.64,1);
+}
+#winner-emoji{font-size:4rem;margin-bottom:8px;}
+#winner-title{font-family:'Fredoka One',sans-serif;font-size:2.1rem;margin-bottom:7px;}
+#winner-title.red{color:var(--red);}
+#winner-title.blue{color:var(--blue);}
+#winner-sub{font-size:.95rem;color:#666;margin-bottom:22px;}
+.winner-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+#restart-btn,#newgame-btn{
+  font-family:'Fredoka One',sans-serif;font-size:1.1rem;
+  padding:11px 26px;border:none;border-radius:13px;cursor:pointer;
+  transition:transform .1s;
+}
+#restart-btn{background:var(--gold);color:#7d4200;box-shadow:0 4px 0 var(--gold-d);}
+#newgame-btn{background:#607d8b;color:#fff;box-shadow:0 4px 0 #37474f;}
+#restart-btn:hover,#newgame-btn:hover{transform:translateY(-2px);}
+
+@keyframes shake{
+  0%,100%{transform:translateX(0);}20%{transform:translateX(-7px);}
+  40%{transform:translateX(7px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}
+}
+@keyframes flashGreen{0%{transform:scale(1);}40%{transform:scale(1.06);}100%{transform:scale(1);}}
+@keyframes popIn{from{transform:scale(.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ SETUP SCREEN ══════════════ -->
+<div id="setup-screen">
+  <h1>⚡ MATHE-TAUZIEHEN ⚡</h1>
+  <p class="setup-sub">Lade ein Bild hoch oder gib ein Thema ein – die KI generiert passende Aufgaben!</p>
+
+  <div id="setup-box">
+    <div>
+      <label class="setup-label">📚 Thema / Kontext (optional)</label>
+      <input id="topic-input" type="text"
+        placeholder="z. B. Pizzabacken, Handball-WM, Reise nach Paris …" />
+    </div>
+
+    <div>
+      <label class="setup-label">🖼️ Bild oder Aufgabenblatt hochladen (optional)</label>
+      <div id="upload-zone">
+        <input type="file" id="file-input" accept="image/*" />
+        <div class="upload-icon">📎</div>
+        <p><strong>Bild hier ablegen</strong> oder klicken zum Auswählen<br>
+          (JPG, PNG – wird als Kontext für die Aufgaben genutzt)</p>
+        <img id="img-preview" alt="Vorschau" />
+      </div>
+    </div>
+
+    <div id="setup-status">Ohne Angabe werden zufällige Bruchaufgaben generiert.</div>
+    <button id="start-btn">🎮 Spiel starten!</button>
+  </div>
+</div>
+
+<!-- ══════════════ GAME SCREEN ══════════════ -->
+<div id="game-screen">
+  <div id="header">
+    <h1>⚡ MATHE-TAUZIEHEN</h1>
+    <div id="score-display">
+      <div class="score-box red">🔴 <span id="score-red">0</span></div>
+      <div class="score-box blue">🔵 <span id="score-blue">0</span></div>
+    </div>
+  </div>
+
+  <div id="task-area">
+    <div id="task-context">Aufgabe</div>
+    <div id="task-text">Lade…</div>
+  </div>
+
+  <div id="game-canvas-wrap">
+    <canvas id="gameCanvas"></canvas>
+  </div>
+
+  <div id="input-row">
+    <!-- ROT -->
+    <div class="team-panel red">
+      <div class="team-label red">🔴 Team ROT</div>
+      <div class="answer-row">
+        <input class="answer-input red" id="input-red" type="text" placeholder="Antwort" autocomplete="off" readonly />
+        <button class="submit-btn red" id="btn-red">✔</button>
+      </div>
+      <div class="numpad" id="numpad-red"></div>
+      <div class="feedback-msg red" id="feedback-red"></div>
+    </div>
+
+    <!-- BLAU -->
+    <div class="team-panel blue">
+      <div class="team-label blue">🔵 Team BLAU</div>
+      <div class="answer-row">
+        <input class="answer-input blue" id="input-blue" type="text" placeholder="Antwort" autocomplete="off" readonly />
+        <button class="submit-btn blue" id="btn-blue">✔</button>
+      </div>
+      <div class="numpad" id="numpad-blue"></div>
+      <div class="feedback-msg blue" id="feedback-blue"></div>
+    </div>
+  </div>
+</div>
+
+<!-- WINNER -->
+<div id="winner-overlay">
+  <div id="winner-box">
+    <div id="winner-emoji">🏆</div>
+    <div id="winner-title"></div>
+    <div id="winner-sub"></div>
+    <div class="winner-btns">
+      <button id="restart-btn">🔄 Nochmal!</button>
+      <button id="newgame-btn">🏠 Neues Thema</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════
+//  SETUP
+// ════════════════════════════════════════════════════
+let uploadedImageB64 = null;
+let uploadedMediaType = 'image/jpeg';
+let topicText = '';
+let aiTaskPool = [];
+let usedIdx = new Set();
+
+document.getElementById('file-input').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = document.getElementById('img-preview');
+    img.src = ev.target.result;
+    img.style.display = 'block';
+    uploadedImageB64 = ev.target.result.split(',')[1];
+    uploadedMediaType = file.type || 'image/jpeg';
+  };
+  reader.readAsDataURL(file);
+  document.getElementById('setup-status').textContent = `📎 "${file.name}" geladen – bereit!`;
+});
+
+document.getElementById('start-btn').addEventListener('click', async () => {
+  topicText = document.getElementById('topic-input').value.trim();
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'flex';
+  initCanvas();
+  buildNumpads();
+  bindEvents();
+  render();
+  await loadTaskPool();
+  nextTask();
+});
+
+// ════════════════════════════════════════════════════
+//  AI TASKS
+// ════════════════════════════════════════════════════
+async function loadTaskPool() {
+  document.getElementById('task-text').textContent = '⏳ KI generiert Aufgaben…';
+  document.getElementById('task-text').classList.add('loading');
+
+  const instructions = `Du bist Mathe-Lehrer. Erstelle GENAU 12 Rechenaufgaben mit rationalen Zahlen (Brüche, negative Zahlen) und den 4 Grundrechenarten.
+Antworte NUR mit einem JSON-Array, ohne Text oder Backticks.
+Jedes Objekt hat:
+- "task": Aufgabe als String, Brüche mit / (z.B. "3/4 + 1/2 = ?")
+- "answer_n": Zähler der gekürzten Bruchantwort (ganzzahlig)
+- "answer_d": Nenner (ganzzahlig, positiv)
+- "hint": 1 Satz thematischer Kontext${topicText ? ` zum Thema "${topicText}"` : ''}
+Nenner ≤ 12, alle 4 Operatoren variieren. Ergebnisse überschaubar.`;
+
+  let userContent;
+  if (uploadedImageB64) {
+    userContent = [
+      { type: 'image', source: { type: 'base64', media_type: uploadedMediaType, data: uploadedImageB64 } },
+      { type: 'text', text: instructions + '\nBeziehe die Aufgaben auf das Bild.' }
+    ];
+  } else {
+    userContent = instructions;
+  }
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: userContent }]
+      })
+    });
+    const data = await res.json();
+    const raw = data.content.map(b => b.text || '').join('').trim().replace(/```json|```/g, '');
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      aiTaskPool = parsed;
+      if (topicText) document.getElementById('task-context').textContent = `📚 ${topicText}`;
+      else if (uploadedImageB64) document.getElementById('task-context').textContent = '🖼️ Aufgabe aus Bild';
+    }
+  } catch { aiTaskPool = []; }
+
+  document.getElementById('task-text').classList.remove('loading');
+}
+
+// ════════════════════════════════════════════════════
+//  LOCAL TASK FALLBACK
+// ════════════════════════════════════════════════════
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+function simplify({n, d}) {
+  if (d < 0) { n=-n; d=-d; }
+  const g = gcd(Math.abs(n), d);
+  return {n: n/g, d: d/g};
+}
+function randFrac() {
+  const d = Math.floor(Math.random()*9)+2;
+  const n = Math.floor(Math.random()*(d*2-1))+1-d;
+  return {n: n===0?1:n, d};
+}
+function fracStr({n,d}) {
+  if (d===1||n%d===0) return String(n/d);
+  return `${n<0?'-':''}${Math.abs(n)}/${d}`;
+}
+function addF(a,b){return simplify({n:a.n*b.d+b.n*a.d,d:a.d*b.d});}
+function subF(a,b){return simplify({n:a.n*b.d-b.n*a.d,d:a.d*b.d});}
+function mulF(a,b){return simplify({n:a.n*b.n,d:a.d*b.d});}
+function divF(a,b){return simplify({n:a.n*b.d,d:a.d*b.n});}
+
+function genLocalTask() {
+  const ops=['+','-','·','÷'];
+  for(let i=0;i<30;i++){
+    const a=randFrac(), b=randFrac();
+    const op=ops[Math.floor(Math.random()*4)];
+    if(op==='÷'&&b.n===0) continue;
+    let r;
+    if(op==='+')r=addF(a,b);
+    else if(op==='-')r=subF(a,b);
+    else if(op==='·')r=mulF(a,b);
+    else r=divF(a,b);
+    if(r.d===0||Math.abs(r.n)>50||r.d>20) continue;
+    return {task:`${fracStr(a)} ${op} ${fracStr(b)} = ?`, answer_n:r.n, answer_d:r.d, hint:''};
+  }
+}
+
+let currentTask = null;
+function nextTask() {
+  let t;
+  if (aiTaskPool.length > 0) {
+    const available = aiTaskPool.filter((_,i)=>!usedIdx.has(i));
+    if (available.length===0) usedIdx.clear();
+    const pool = aiTaskPool.filter((_,i)=>!usedIdx.has(i));
+    const pick = Math.floor(Math.random()*pool.length);
+    usedIdx.add(aiTaskPool.indexOf(pool[pick]));
+    t = pool[pick];
+  } else {
+    t = genLocalTask();
+  }
+  currentTask = t;
+  document.getElementById('task-text').textContent = t.task;
+}
+
+// ════════════════════════════════════════════════════
+//  CANVAS + RENDER
+// ════════════════════════════════════════════════════
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+let W=0, H=0;
+
+function initCanvas() {
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+}
+function resizeCanvas() {
+  const wrap = document.getElementById('game-canvas-wrap');
+  W = wrap.clientWidth; H = wrap.clientHeight;
+  canvas.width = W; canvas.height = H;
+}
+
+// ── Background ──
+function drawBackground() {
+  const sky = ctx.createLinearGradient(0,0,0,H*.68);
+  sky.addColorStop(0,'#87ceeb'); sky.addColorStop(1,'#c5e8f5');
+  ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+
+  drawCloud(W*.1, H*.12, .65);
+  drawCloud(W*.54, H*.07, .85);
+  drawCloud(W*.84, H*.14, .58);
+
+  const ground=ctx.createLinearGradient(0,H*.68,0,H);
+  ground.addColorStop(0,'#795548'); ground.addColorStop(1,'#3e2723');
+  ctx.fillStyle=ground; ctx.fillRect(0,H*.68,W,H*.32);
+
+  // Grass
+  ctx.fillStyle='#4caf50';
+  ctx.beginPath(); ctx.ellipse(W/2,H*.68,W*.62,H*.055,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#66bb6a';
+  for(let gx=15;gx<W-15;gx+=14){
+    const gy=H*.68+Math.sin(gx*.22)*.028*H;
+    ctx.beginPath(); ctx.moveTo(gx,gy); ctx.lineTo(gx-3,gy-H*.038); ctx.lineTo(gx+3,gy-H*.038);
+    ctx.closePath(); ctx.fill();
+  }
+}
+
+function drawCloud(x,y,sc){
+  ctx.save(); ctx.translate(x,y); ctx.scale(sc,sc);
+  ctx.fillStyle='rgba(255,255,255,.8)';
+  [[0,0,26],[21,-6,19],[44,0,23],[-16,5,16],[64,5,15]].forEach(([cx,cy,r])=>{
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
+  });
+  ctx.restore();
+}
+
+// ── Stick figures ──
+function drawFigure(x, y, color, facing, pulling, idx) {
+  const t = Date.now()/500+idx;
+  const leg = pulling ? Math.sin(t*3)*9 : 0;
+  const lean = pulling ? facing*-5 : 0;
+  const sc = Math.min(1, W/600);
+  const s = Math.max(0.55, sc);
+
+  ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
+  ctx.strokeStyle=color; ctx.lineWidth=2.5; ctx.lineCap='round'; ctx.lineJoin='round';
+
+  // Head
+  ctx.fillStyle=color;
+  ctx.beginPath(); ctx.arc(0,-25,8,0,Math.PI*2); ctx.fill();
+  // Eyes
+  ctx.fillStyle='rgba(255,255,255,.8)';
+  ctx.beginPath(); ctx.arc(facing*2.5,-26.5,1.8,0,Math.PI*2); ctx.fill();
+
+  // Body
+  ctx.beginPath(); ctx.moveTo(0,-17); ctx.lineTo(lean,0); ctx.stroke();
+  // Arms
+  ctx.beginPath(); ctx.moveTo(0,-13); ctx.lineTo(facing*16+lean*.4,-9+Math.sin(t*2)*2.5); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0,-13); ctx.lineTo(-facing*9,-3+Math.sin(t*2+1)*2.5); ctx.stroke();
+  // Legs
+  ctx.beginPath(); ctx.moveTo(lean,0); ctx.lineTo(lean-6+leg*.35,19); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(lean,0); ctx.lineTo(lean+6-leg*.35,19); ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawTeam(cx, facing, color, pulling, shake) {
+  const count=5;
+  const sp=Math.min(36,W*.038);
+  const sx=cx-sp*(count-1)/2;
+  const baseY=H*.6;
+  for(let i=0;i<count;i++){
+    const x=sx+i*sp+(shake?(Math.random()-.5)*3:0);
+    drawFigure(x, baseY, color, facing, pulling, i);
+  }
+}
+
+// ── Rope ──
+let ropeWiggle=0;
+function drawRope(pos) {
+  const shift = (pos/WIN_STEP)*W*.13;
+  const cx = W/2 + shift;
+  const ropeY = H*.515;
+  const ropeW = Math.min(260, W*.29);
+  ropeWiggle += 0.05;
+
+  // Shadow
+  ctx.save(); ctx.globalAlpha=.13;
+  ctx.fillStyle='#000';
+  ctx.beginPath(); ctx.ellipse(cx,ropeY+9,ropeW/2,6,0,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+
+  // Rope
+  const segs=26;
+  const x0=cx-ropeW/2, x1=cx+ropeW/2;
+  for(let i=0;i<segs;i++){
+    const t=i/segs;
+    const rx=x0+(x1-x0)*t;
+    const ry=ropeY+Math.sin(t*Math.PI*3+ropeWiggle)*3;
+    const rw=ropeW/segs+1;
+    const rh=Math.max(10,H*.032);
+    const g=ctx.createLinearGradient(rx,ry-rh/2,rx,ry+rh/2);
+    g.addColorStop(0,'#e6c97a'); g.addColorStop(.4,'#c8a26a');
+    g.addColorStop(.7,'#8d6e63'); g.addColorStop(1,'#c8a26a');
+    ctx.fillStyle=g;
+    ctx.beginPath(); ctx.roundRect(rx,ry-rh/2,rw,rh,2); ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,.1)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(rx,ry-rh/2+2); ctx.lineTo(rx+rw,ry+rh/2-2); ctx.stroke();
+  }
+
+  // Center flag
+  ctx.fillStyle='#e74c3c';
+  ctx.beginPath(); ctx.moveTo(cx-4,ropeY-16); ctx.lineTo(cx+12,ropeY-10); ctx.lineTo(cx-4,ropeY-4);
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='#7f0000'; ctx.lineWidth=1.8;
+  ctx.beginPath(); ctx.moveTo(cx-4,ropeY-18); ctx.lineTo(cx-4,ropeY+10); ctx.stroke();
+}
+
+// ── PROGRESS BAR drawn in canvas, directly above the rope/figures ──
+// Visualized as ground-marker lines + colored zone on the playing field
+function drawProgressVisualization(pos) {
+  // We draw two things:
+  // 1) A slim progress strip just above the figures (in the sky area)
+  // 2) Ground zone markers under the team feet
+
+  const pct = pos / WIN_STEP; // -1..+1, negative=red ahead
+  const stripY = H*.25;
+  const stripW = Math.min(480, W*.52);
+  const stripH = Math.max(16, H*.042);
+  const stripX = (W-stripW)/2;
+  const r = stripH/2;
+
+  // ── Strip background ──
+  ctx.save(); ctx.globalAlpha=.7;
+  ctx.fillStyle='rgba(0,0,0,.3)';
+  ctx.beginPath(); ctx.roundRect(stripX,stripY,stripW,stripH,r); ctx.fill();
+  ctx.restore();
+
+  // ── Red fill (left) ──
+  const midX = stripX+stripW/2;
+  ctx.save(); ctx.beginPath(); ctx.roundRect(stripX,stripY,stripW,stripH,r); ctx.clip();
+  // red side
+  ctx.fillStyle='#e74c3c';
+  ctx.fillRect(stripX,stripY, stripW/2, stripH);
+  // blue side
+  ctx.fillStyle='#2980b9';
+  ctx.fillRect(midX,stripY, stripW/2, stripH);
+  ctx.restore();
+
+  // ── Win zone highlights ──
+  ctx.save(); ctx.beginPath(); ctx.roundRect(stripX,stripY,stripW,stripH,r); ctx.clip();
+  ctx.globalAlpha=.35;
+  ctx.fillStyle='#ff1744';
+  ctx.fillRect(stripX, stripY, stripW/WIN_STEP, stripH);
+  ctx.fillStyle='#0d47a1';
+  ctx.fillRect(stripX+stripW*(1-1/WIN_STEP), stripY, stripW/WIN_STEP, stripH);
+  ctx.restore();
+
+  // ── Diagonal stripes overlay ──
+  ctx.save(); ctx.beginPath(); ctx.roundRect(stripX,stripY,stripW,stripH,r); ctx.clip();
+  ctx.globalAlpha=.07; ctx.strokeStyle='#fff'; ctx.lineWidth=4;
+  for(let sx=stripX-stripH;sx<stripX+stripW+stripH;sx+=18){
+    ctx.beginPath(); ctx.moveTo(sx,stripY); ctx.lineTo(sx+stripH,stripY+stripH); ctx.stroke();
+  }
+  ctx.restore();
+
+  // ── Moving indicator (the key progress element) ──
+  const thumbX = midX + pct*(stripW/2);
+  const thumbR = r+5;
+
+  // Glow
+  ctx.save();
+  const gl=ctx.createRadialGradient(thumbX,stripY+r,0,thumbX,stripY+r,thumbR*2.2);
+  gl.addColorStop(0,'rgba(255,255,220,.6)');
+  gl.addColorStop(1,'rgba(255,255,220,0)');
+  ctx.fillStyle=gl;
+  ctx.beginPath(); ctx.arc(thumbX,stripY+r,thumbR*2.2,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+
+  ctx.fillStyle='#fff';
+  ctx.beginPath(); ctx.arc(thumbX,stripY+r,thumbR,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,.4)'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.arc(thumbX,stripY+r,thumbR,0,Math.PI*2); ctx.stroke();
+
+  // Arrow inside thumb showing direction
+  if (Math.abs(pos) > 0.05) {
+    const arrowDir = pos < 0 ? -1 : 1;
+    ctx.fillStyle = pos < 0 ? '#e74c3c' : '#2980b9';
+    ctx.font = `bold ${thumbR}px Arial`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(arrowDir < 0 ? '◀' : '▶', thumbX, stripY+r);
+  }
+
+  // ── ROT / BLAU labels ──
+  ctx.font=`bold ${Math.max(10,stripH*.52)}px Nunito`;
+  ctx.textBaseline='middle'; ctx.textAlign='left';
+  ctx.fillStyle='rgba(255,255,255,.85)';
+  ctx.fillText('🔴 ROT', stripX+8, stripY+r);
+  ctx.textAlign='right';
+  ctx.fillText('BLAU 🔵', stripX+stripW-8, stripY+r);
+
+  // ── Ground zone markers: colored patches under each team ──
+  const ropeCx = W/2 + pct*W*.13;
+  const gap = Math.min(175, W*.2);
+  const redCx = ropeCx-gap, blueCx = ropeCx+gap;
+  const groundY = H*.65;
+  const zoneW = Math.min(130, W*.15);
+  const zoneH = H*.025;
+
+  // Red zone
+  ctx.save(); ctx.globalAlpha=.35;
+  ctx.fillStyle='#e74c3c';
+  ctx.beginPath(); ctx.ellipse(redCx,groundY,zoneW/2,zoneH,0,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+  // Blue zone
+  ctx.save(); ctx.globalAlpha=.35;
+  ctx.fillStyle='#2980b9';
+  ctx.beginPath(); ctx.ellipse(blueCx,groundY,zoneW/2,zoneH,0,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+
+  // Win-zone boundary lines on ground
+  const winShift = W*.13;
+  ctx.save(); ctx.globalAlpha=.6;
+  // Red win boundary
+  ctx.strokeStyle='#e74c3c'; ctx.lineWidth=3;
+  ctx.setLineDash([6,4]);
+  ctx.beginPath();
+  ctx.moveTo(W/2-winShift, H*.64);
+  ctx.lineTo(W/2-winShift, H*.72);
+  ctx.stroke();
+  // Blue win boundary
+  ctx.strokeStyle='#2980b9';
+  ctx.beginPath();
+  ctx.moveTo(W/2+winShift, H*.64);
+  ctx.lineTo(W/2+winShift, H*.72);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+}
+
+// ── Render loop ──
+const WIN_STEP = 7;
+let ropePos=0, scoreRed=0, scoreBlue=0;
+let animTarget=0, animCurrent=0, animating=false;
+let pullingTeam=null, pulsingTimer=0;
+let cooldownRed=false, cooldownBlue=false;
+
+function render() {
+  if(!W||!H){ requestAnimationFrame(render); return; }
+  ctx.clearRect(0,0,W,H);
+  drawBackground();
+
+  if(animating){
+    animCurrent+=(animTarget-animCurrent)*.09;
+    if(Math.abs(animCurrent-animTarget)<.008){ animCurrent=animTarget; animating=false; pullingTeam=null; }
+  }
+  if(pulsingTimer>0) pulsingTimer--;
+
+  const pos=animCurrent;
+  const ropeCx=W/2+(pos/WIN_STEP)*W*.13;
+  const gap=Math.min(175,W*.2);
+
+  drawProgressVisualization(pos);
+  drawTeam(ropeCx-gap,-1,'#e74c3c',true,pullingTeam==='red'&&pulsingTimer>0);
+  drawTeam(ropeCx+gap, 1,'#2980b9',true,pullingTeam==='blue'&&pulsingTimer>0);
+  drawRope(pos);
+
+  requestAnimationFrame(render);
+}
+
+// ════════════════════════════════════════════════════
+//  NUMPAD
+// ════════════════════════════════════════════════════
+function buildNumpads(){
+  buildNumpad('numpad-red','red');
+  buildNumpad('numpad-blue','blue');
+}
+function buildNumpad(id, team){
+  const keys=[
+    {l:'7',v:'7'},{l:'8',v:'8'},{l:'9',v:'9'},{l:'⌫',v:'back',cls:'del'},
+    {l:'4',v:'4'},{l:'5',v:'5'},{l:'6',v:'6'},{l:'/',v:'/',cls:'op'},
+    {l:'1',v:'1'},{l:'2',v:'2'},{l:'3',v:'3'},{l:'−',v:'-',cls:'op'},
+    {l:'0',v:'0'},{l:',',v:','},{l:'.',v:'.',cls:'op'},
+    {l:'✔',v:'ok',cls:`accent-${team}`}
+  ];
+  const c=document.getElementById(id);
+  keys.forEach(k=>{
+    const btn=document.createElement('button');
+    btn.className='nk '+(k.cls||'');
+    btn.textContent=k.l;
+    btn.addEventListener('pointerdown', e=>{
+      e.preventDefault();
+      handleNumpad(team, k.v);
+    });
+    c.appendChild(btn);
+  });
+}
+function handleNumpad(team, val){
+  if(team==='red'&&cooldownRed) return;
+  if(team==='blue'&&cooldownBlue) return;
+  const input=document.getElementById(`input-${team}`);
+  if(val==='back') input.value=input.value.slice(0,-1);
+  else if(val==='ok') checkAnswer(team);
+  else input.value+=val;
+}
+
+// ════════════════════════════════════════════════════
+//  ANSWER CHECK
+// ════════════════════════════════════════════════════
+function parseAnswer(str){
+  str=str.trim().replace(',','.');
+  if(str.includes('/')){
+    const p=str.split('/');
+    if(p.length===2){const n=parseFloat(p[0]),d=parseFloat(p[1]);if(!isNaN(n)&&!isNaN(d)&&d!==0)return n/d;}
+  }
+  const v=parseFloat(str); return isNaN(v)?null:v;
+}
+function correctVal(t){ return t.answer_n/t.answer_d; }
+
+function checkAnswer(team){
+  if(!currentTask) return;
+  if(team==='red'&&cooldownRed) return;
+  if(team==='blue'&&cooldownBlue) return;
+  const inputEl=document.getElementById(`input-${team}`);
+  const feedbackEl=document.getElementById(`feedback-${team}`);
+  const val=parseAnswer(inputEl.value);
+
+  if(val===null){ feedbackEl.textContent='⚠ Ungültige Eingabe'; flashInput(inputEl,'wrong'); return; }
+
+  const ok=Math.abs(val-correctVal(currentTask))<0.0002;
+  if(ok){
+    feedbackEl.textContent='✔ Richtig! Zug!';
+    flashInput(inputEl,'correct');
+    inputEl.value='';
+    if(team==='red'){ ropePos--; scoreRed++; document.getElementById('score-red').textContent=scoreRed; }
+    else            { ropePos++; scoreBlue++; document.getElementById('score-blue').textContent=scoreBlue; }
+    animTarget=ropePos; animating=true; pullingTeam=team; pulsingTimer=38;
+    setTimeout(()=>{ feedbackEl.textContent=''; },1500);
+    if(Math.abs(ropePos)>=WIN_STEP) setTimeout(()=>showWinner(team),700);
+    else setTimeout(nextTask,400);
+    setCooldown(team,900);
+  } else {
+    feedbackEl.textContent='✗ Falsch – nochmal!';
+    flashInput(inputEl,'wrong');
+    setTimeout(()=>{ feedbackEl.textContent=''; },1500);
+    setCooldown(team,900);
+  }
+}
+
+function setCooldown(team,ms){
+  const input=document.getElementById(`input-${team}`);
+  input.disabled=true;
+  if(team==='red') cooldownRed=true; else cooldownBlue=true;
+  setTimeout(()=>{
+    input.disabled=false;
+    if(team==='red') cooldownRed=false; else cooldownBlue=false;
+  },ms);
+}
+function flashInput(el,cls){
+  el.classList.remove('correct','wrong'); void el.offsetWidth;
+  el.classList.add(cls);
+  setTimeout(()=>el.classList.remove(cls),600);
+}
+
+// ════════════════════════════════════════════════════
+//  WINNER
+// ════════════════════════════════════════════════════
+function showWinner(team){
+  const t=document.getElementById('winner-title');
+  t.textContent=team==='red'?'🔴 Team ROT gewinnt!':'🔵 Team BLAU gewinnt!';
+  t.className=team==='red'?'red':'blue';
+  document.getElementById('winner-sub').textContent=`Glückwunsch! ROT ${scoreRed} – BLAU ${scoreBlue}`;
+  document.getElementById('winner-overlay').classList.add('show');
+  confettiBurst();
+}
+
+function restartSame(){
+  ropePos=0; animCurrent=0; animTarget=0;
+  scoreRed=0; scoreBlue=0;
+  document.getElementById('score-red').textContent='0';
+  document.getElementById('score-blue').textContent='0';
+  document.getElementById('feedback-red').textContent='';
+  document.getElementById('feedback-blue').textContent='';
+  document.getElementById('input-red').value='';
+  document.getElementById('input-blue').value='';
+  document.getElementById('winner-overlay').classList.remove('show');
+  usedIdx.clear(); nextTask();
+}
+function goSetup(){
+  ropePos=0; animCurrent=0; animTarget=0;
+  scoreRed=0; scoreBlue=0; aiTaskPool=[]; usedIdx.clear();
+  uploadedImageB64=null; topicText='';
+  document.getElementById('winner-overlay').classList.remove('show');
+  document.getElementById('game-screen').style.display='none';
+  document.getElementById('setup-screen').style.display='flex';
+  document.getElementById('score-red').textContent='0';
+  document.getElementById('score-blue').textContent='0';
+  document.getElementById('img-preview').style.display='none';
+  document.getElementById('topic-input').value='';
+  document.getElementById('task-context').textContent='Aufgabe';
+  document.getElementById('setup-status').textContent='Ohne Angabe werden zufällige Bruchaufgaben generiert.';
+}
+
+// ════════════════════════════════════════════════════
+//  CONFETTI
+// ════════════════════════════════════════════════════
+function confettiBurst(){
+  const cols=['#e74c3c','#2980b9','#f1c40f','#2ecc71','#9b59b6','#e67e22'];
+  for(let i=0;i<90;i++){
+    const el=document.createElement('div');
+    el.style.cssText=`position:fixed;width:9px;height:9px;border-radius:2px;
+      background:${cols[i%cols.length]};left:${Math.random()*100}vw;top:-10px;
+      z-index:400;pointer-events:none;
+      animation:confettiFall ${1.5+Math.random()*2}s ease-in forwards;
+      animation-delay:${Math.random()*.5}s;transform:rotate(${Math.random()*360}deg);`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),3500);
+  }
+}
+const cs=document.createElement('style');
+cs.textContent='@keyframes confettiFall{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}';
+document.head.appendChild(cs);
+
+// ════════════════════════════════════════════════════
+//  EVENTS
+// ════════════════════════════════════════════════════
+function bindEvents(){
+  document.getElementById('btn-red').addEventListener('click',()=>checkAnswer('red'));
+  document.getElementById('btn-blue').addEventListener('click',()=>checkAnswer('blue'));
+  document.getElementById('restart-btn').addEventListener('click',restartSame);
+  document.getElementById('newgame-btn').addEventListener('click',goSetup);
+}
+</script>
+</body>
+</html>
