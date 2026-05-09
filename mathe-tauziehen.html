@@ -6,281 +6,157 @@
 <title>Mathe-Tauziehen</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap');
-
-:root {
-  --red:#e74c3c; --red-d:#c0392b; --red-l:#ff8a80;
-  --blue:#2980b9; --blue-d:#1a5276; --blue-l:#82cfff;
-  --gold:#f1c40f; --gold-d:#c49000;
-}
+:root{--red:#e74c3c;--red-d:#c0392b;--red-l:#ff8a80;--blue:#2980b9;--blue-d:#1a5276;--blue-l:#82cfff;--gold:#f1c40f;--gold-d:#c49000;}
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;height:100%;overflow:hidden;}
-body{
-  font-family:'Nunito',sans-serif;
-  background:linear-gradient(160deg,#1a237e,#1565c0);
-  display:flex;flex-direction:column;align-items:center;
-  user-select:none;
-}
+body{font-family:'Nunito',sans-serif;background:linear-gradient(160deg,#1a237e,#1565c0);display:flex;flex-direction:column;align-items:center;user-select:none;}
 
-/* ══════════ SETUP SCREEN ══════════ */
-#setup-screen{
+/* ══ DIFFICULTY SCREEN ══ */
+#diff-screen{
   position:fixed;inset:0;z-index:200;
   background:linear-gradient(160deg,#0d1b6b,#1565c0);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:20px;gap:0;
+  padding:24px;gap:0;
 }
-#setup-screen h1{
-  font-family:'Fredoka One',sans-serif;
-  font-size:clamp(1.8rem,5vw,3rem);
-  color:var(--gold);
-  text-shadow:3px 3px 0 #7d5200,0 0 40px rgba(241,196,15,.4);
-  letter-spacing:3px;margin-bottom:6px;text-align:center;
+#diff-screen h1{
+  font-family:'Fredoka One',sans-serif;font-size:clamp(2rem,5vw,3.2rem);
+  color:var(--gold);text-shadow:3px 3px 0 #7d5200,0 0 40px rgba(241,196,15,.4);
+  letter-spacing:3px;margin-bottom:8px;text-align:center;
 }
-.setup-sub{color:rgba(255,255,255,.6);font-size:.9rem;margin-bottom:24px;text-align:center;}
-#setup-box{
-  background:rgba(255,255,255,.1);backdrop-filter:blur(16px);
-  border:2px solid rgba(255,255,255,.2);border-radius:24px;
-  padding:28px 32px;width:min(500px,94vw);
-  display:flex;flex-direction:column;gap:14px;
+#diff-screen .dsub{color:rgba(255,255,255,.6);font-size:.95rem;margin-bottom:32px;text-align:center;}
+#diff-cards{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;width:min(740px,95vw);}
+.diff-card{
+  flex:1;min-width:160px;max-width:220px;
+  background:rgba(255,255,255,.1);backdrop-filter:blur(12px);
+  border:2.5px solid rgba(255,255,255,.2);border-radius:22px;
+  padding:26px 18px 22px;text-align:center;cursor:pointer;
+  transition:transform .15s,border-color .15s,background .15s;
 }
-.setup-label{
-  color:rgba(255,255,255,.75);font-size:.75rem;font-weight:700;
-  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;display:block;
-}
-#topic-input{
-  width:100%;padding:11px 15px;border-radius:13px;
-  border:2px solid rgba(255,255,255,.22);
-  background:rgba(255,255,255,.14);color:#fff;
-  font-family:'Nunito',sans-serif;font-size:1rem;font-weight:600;outline:none;
-  transition:border .2s;
-}
-#topic-input::placeholder{color:rgba(255,255,255,.35);}
-#topic-input:focus{border-color:var(--gold);}
+.diff-card:hover{transform:translateY(-5px);background:rgba(255,255,255,.18);}
+.diff-card.easy{border-color:rgba(46,204,113,.5);}
+.diff-card.easy:hover{border-color:#2ecc71;box-shadow:0 0 24px rgba(46,204,113,.4);}
+.diff-card.medium{border-color:rgba(241,196,15,.5);}
+.diff-card.medium:hover{border-color:var(--gold);box-shadow:0 0 24px rgba(241,196,15,.4);}
+.diff-card.hard{border-color:rgba(231,76,60,.5);}
+.diff-card.hard:hover{border-color:var(--red);box-shadow:0 0 24px rgba(231,76,60,.4);}
+.diff-emoji{font-size:3rem;margin-bottom:10px;}
+.diff-title{font-family:'Fredoka One',sans-serif;font-size:1.5rem;letter-spacing:1px;margin-bottom:6px;}
+.diff-card.easy .diff-title{color:#2ecc71;}
+.diff-card.medium .diff-title{color:var(--gold);}
+.diff-card.hard .diff-title{color:var(--red-l);}
+.diff-desc{font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.45;}
+.diff-count{font-size:.7rem;color:rgba(255,255,255,.35);margin-top:8px;font-weight:700;letter-spacing:1px;}
 
-#upload-zone{
-  border:2.5px dashed rgba(255,255,255,.28);border-radius:15px;
-  padding:18px 14px;text-align:center;cursor:pointer;
-  transition:border .2s,background .2s;background:rgba(255,255,255,.06);
-  position:relative;
-}
-#upload-zone:hover{border-color:var(--gold);background:rgba(241,196,15,.07);}
-#upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-#upload-zone .upload-icon{font-size:2rem;margin-bottom:5px;}
-#upload-zone p{color:rgba(255,255,255,.55);font-size:.82rem;line-height:1.4;}
-#upload-zone p strong{color:rgba(255,255,255,.85);}
-#img-preview{display:none;width:100%;max-height:110px;object-fit:cover;border-radius:10px;margin-top:8px;}
-
-#setup-status{color:rgba(255,255,255,.6);font-size:.82rem;text-align:center;min-height:18px;}
-
-#start-btn{
-  font-family:'Fredoka One',sans-serif;font-size:1.4rem;
-  padding:14px;border:none;border-radius:15px;cursor:pointer;
-  background:var(--gold);color:#7d4200;
-  box-shadow:0 5px 0 var(--gold-d);
-  transition:transform .1s,box-shadow .1s;letter-spacing:1px;width:100%;
-}
-#start-btn:hover{transform:translateY(-2px);}
-#start-btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--gold-d);}
-
-/* ══════════ GAME SCREEN ══════════ */
-#game-screen{
-  display:none;flex-direction:column;align-items:center;
-  width:100%;height:100%;
-}
-
-/* Header */
-#header{
-  width:100%;max-width:980px;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:7px 14px 2px;flex-shrink:0;
-}
-#header h1{
-  font-family:'Fredoka One',sans-serif;font-size:clamp(1.1rem,2.5vw,1.7rem);
-  color:var(--gold);text-shadow:2px 2px 0 #7d5200;letter-spacing:2px;
-}
-#score-display{display:flex;gap:8px;}
-.score-box{
-  font-family:'Fredoka One',sans-serif;font-size:.95rem;
-  padding:3px 13px;border-radius:14px;white-space:nowrap;
-}
+/* ══ GAME SCREEN ══ */
+#game-screen{display:none;flex-direction:column;align-items:center;width:100%;height:100%;}
+#header{width:100%;max-width:980px;display:flex;align-items:center;justify-content:space-between;padding:7px 14px 2px;flex-shrink:0;}
+#header h1{font-family:'Fredoka One',sans-serif;font-size:clamp(1.1rem,2.5vw,1.7rem);color:var(--gold);text-shadow:2px 2px 0 #7d5200;letter-spacing:2px;}
+#header-right{display:flex;gap:8px;align-items:center;}
+.score-box{font-family:'Fredoka One',sans-serif;font-size:.95rem;padding:3px 13px;border-radius:14px;white-space:nowrap;}
 .score-box.red{background:var(--red);color:#fff;box-shadow:0 2px 0 var(--red-d);}
 .score-box.blue{background:var(--blue);color:#fff;box-shadow:0 2px 0 var(--blue-d);}
+#lead-badge{font-family:'Fredoka One',sans-serif;font-size:.78rem;padding:2px 10px;border-radius:10px;background:rgba(241,196,15,.22);color:var(--gold);border:1px solid rgba(241,196,15,.35);white-space:nowrap;}
+#diff-badge{font-family:'Fredoka One',sans-serif;font-size:.72rem;padding:2px 9px;border-radius:10px;white-space:nowrap;}
+#diff-badge.easy{background:rgba(46,204,113,.25);color:#2ecc71;border:1px solid rgba(46,204,113,.4);}
+#diff-badge.medium{background:rgba(241,196,15,.22);color:var(--gold);border:1px solid rgba(241,196,15,.35);}
+#diff-badge.hard{background:rgba(231,76,60,.22);color:var(--red-l);border:1px solid rgba(231,76,60,.35);}
 
-/* Task */
-#task-area{
-  width:100%;max-width:980px;
-  background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
-  border:2px solid rgba(255,255,255,.2);border-radius:16px;
-  padding:8px 18px;margin:0 auto 3px;text-align:center;flex-shrink:0;
-}
+#task-area{width:100%;max-width:980px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);border:2px solid rgba(255,255,255,.2);border-radius:16px;padding:8px 18px;margin:0 auto 3px;text-align:center;flex-shrink:0;}
 #task-context{font-size:.7rem;color:rgba(255,255,255,.5);letter-spacing:1.5px;text-transform:uppercase;font-weight:700;margin-bottom:1px;}
-#task-text{
-  font-family:'Fredoka One',sans-serif;
-  font-size:clamp(1.3rem,3.5vw,1.9rem);
-  color:#fff;text-shadow:1px 1px 5px rgba(0,0,0,.3);letter-spacing:2px;min-height:1.2em;
-}
-#task-text.loading{animation:pulse 1s ease-in-out infinite;}
-
-/* Canvas */
-#game-canvas-wrap{
-  width:100%;max-width:980px;
-  flex:1;min-height:0;position:relative;
-}
+#task-text{font-family:'Fredoka One',sans-serif;font-size:clamp(1.3rem,3.5vw,2rem);color:#fff;text-shadow:1px 1px 5px rgba(0,0,0,.3);letter-spacing:2px;min-height:1.2em;}
+#game-canvas-wrap{width:100%;max-width:980px;flex:1;min-height:0;position:relative;}
 canvas{display:block;width:100%;height:100%;}
-
-/* ══════════ INPUT + NUMPAD ══════════ */
-#input-row{
-  width:100%;max-width:980px;
-  display:flex;gap:7px;padding:3px 8px 7px;flex-shrink:0;
-}
-.team-panel{
-  flex:1;background:rgba(255,255,255,.1);
-  border:2px solid rgba(255,255,255,.15);
-  border-radius:16px;padding:7px 8px;
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-}
+#input-row{width:100%;max-width:980px;display:flex;gap:7px;padding:3px 8px 7px;flex-shrink:0;}
+.team-panel{flex:1;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.15);border-radius:16px;padding:7px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .team-panel.red{border-color:rgba(231,76,60,.35);}
 .team-panel.blue{border-color:rgba(41,128,185,.35);}
-
-.team-label{
-  font-family:'Fredoka One',sans-serif;font-size:.88rem;
-  padding:2px 11px;border-radius:9px;letter-spacing:.4px;
-}
+.team-label{font-family:'Fredoka One',sans-serif;font-size:.88rem;padding:2px 11px;border-radius:9px;letter-spacing:.4px;}
 .team-label.red{background:var(--red);color:#fff;box-shadow:0 2px 0 var(--red-d);}
 .team-label.blue{background:var(--blue);color:#fff;box-shadow:0 2px 0 var(--blue-d);}
-
 .answer-row{display:flex;gap:5px;width:100%;}
-.answer-input{
-  flex:1;font-family:'Fredoka One',sans-serif;font-size:1.2rem;
-  padding:6px 8px;border-radius:9px;border:2.5px solid transparent;
-  outline:none;text-align:center;
-  background:rgba(255,255,255,.92);color:#222;
-  transition:border .15s,box-shadow .15s;
-  caret-color:transparent; /* readonly, numpad only */
-}
-.answer-input.red:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(231,76,60,.2);}
-.answer-input.blue:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(41,128,185,.2);}
+.answer-input{flex:1;font-family:'Fredoka One',sans-serif;font-size:1.2rem;padding:6px 8px;border-radius:9px;border:2.5px solid transparent;outline:none;text-align:center;background:rgba(255,255,255,.92);color:#222;transition:border .15s;caret-color:transparent;}
+.answer-input.red:focus{border-color:var(--red);}
+.answer-input.blue:focus{border-color:var(--blue);}
 .answer-input.correct{background:#c8e6c9;border-color:#43a047;animation:flashGreen .4s;}
 .answer-input.wrong{background:#ffcdd2;border-color:#e53935;animation:shake .35s;}
-
-.submit-btn{
-  font-family:'Fredoka One',sans-serif;font-size:1.1rem;
-  padding:6px 12px;border:none;border-radius:9px;cursor:pointer;
-  transition:transform .1s,box-shadow .1s;
-}
+.submit-btn{font-family:'Fredoka One',sans-serif;font-size:1.1rem;padding:6px 12px;border:none;border-radius:9px;cursor:pointer;transition:transform .1s;}
 .submit-btn:active{transform:translateY(2px);}
 .submit-btn.red{background:var(--red);color:#fff;box-shadow:0 3px 0 var(--red-d);}
 .submit-btn.blue{background:var(--blue);color:#fff;box-shadow:0 3px 0 var(--blue-d);}
-
-/* NUMPAD */
-.numpad{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:3px;width:100%;
-}
-.nk{
-  font-family:'Fredoka One',sans-serif;font-size:.95rem;
-  padding:6px 3px;border:none;border-radius:8px;cursor:pointer;
-  background:rgba(255,255,255,.88);color:#333;
-  box-shadow:0 2px 0 rgba(0,0,0,.18);
-  transition:transform .07s,filter .07s;touch-action:manipulation;
-}
-.nk:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(0,0,0,.18);}
-.nk.op{background:rgba(255,255,255,.55);color:#444;}
+.numpad{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;width:100%;}
+.nk{font-family:'Fredoka One',sans-serif;font-size:.95rem;padding:7px 3px;border:none;border-radius:8px;cursor:pointer;background:rgba(255,255,255,.88);color:#333;box-shadow:0 2px 0 rgba(0,0,0,.18);transition:transform .07s;touch-action:manipulation;}
+.nk:active{transform:translateY(1px);}
+.nk.op{background:rgba(255,255,255,.52);}
 .nk.accent-red{background:var(--red);color:#fff;box-shadow:0 2px 0 var(--red-d);}
 .nk.accent-blue{background:var(--blue);color:#fff;box-shadow:0 2px 0 var(--blue-d);}
-.nk.del{background:rgba(200,200,200,.7);color:#555;}
-
-.feedback-msg{
-  font-size:.74rem;font-weight:700;height:15px;letter-spacing:.2px;
-}
+.nk.del{background:rgba(175,175,175,.7);}
+.feedback-msg{font-size:.74rem;font-weight:700;height:15px;}
 .feedback-msg.red{color:var(--red-l);}
 .feedback-msg.blue{color:var(--blue-l);}
 
-/* ══════════ WINNER ══════════ */
-#winner-overlay{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);
-  z-index:300;align-items:center;justify-content:center;
-}
+/* Winner */
+#winner-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:300;align-items:center;justify-content:center;}
 #winner-overlay.show{display:flex;}
-#winner-box{
-  background:#fff;border-radius:26px;padding:38px 52px;
-  text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);
-  animation:popIn .4s cubic-bezier(.34,1.56,.64,1);
-}
+#winner-box{background:#fff;border-radius:26px;padding:38px 52px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:popIn .4s cubic-bezier(.34,1.56,.64,1);}
 #winner-emoji{font-size:4rem;margin-bottom:8px;}
 #winner-title{font-family:'Fredoka One',sans-serif;font-size:2.1rem;margin-bottom:7px;}
-#winner-title.red{color:var(--red);}
-#winner-title.blue{color:var(--blue);}
+#winner-title.red{color:var(--red);}#winner-title.blue{color:var(--blue);}
 #winner-sub{font-size:.95rem;color:#666;margin-bottom:22px;}
-.winner-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
-#restart-btn,#newgame-btn{
-  font-family:'Fredoka One',sans-serif;font-size:1.1rem;
-  padding:11px 26px;border:none;border-radius:13px;cursor:pointer;
-  transition:transform .1s;
-}
-#restart-btn{background:var(--gold);color:#7d4200;box-shadow:0 4px 0 var(--gold-d);}
-#newgame-btn{background:#607d8b;color:#fff;box-shadow:0 4px 0 #37474f;}
-#restart-btn:hover,#newgame-btn:hover{transform:translateY(-2px);}
+.winner-btns{display:flex;gap:10px;justify-content:center;}
+#restart-btn{font-family:'Fredoka One',sans-serif;font-size:1.1rem;padding:11px 26px;border:none;border-radius:13px;cursor:pointer;background:var(--gold);color:#7d4200;box-shadow:0 4px 0 var(--gold-d);transition:transform .1s;}
+#back-btn{font-family:'Fredoka One',sans-serif;font-size:1.1rem;padding:11px 26px;border:none;border-radius:13px;cursor:pointer;background:#607d8b;color:#fff;box-shadow:0 4px 0 #37474f;transition:transform .1s;}
+#restart-btn:hover,#back-btn:hover{transform:translateY(-2px);}
 
-@keyframes shake{
-  0%,100%{transform:translateX(0);}20%{transform:translateX(-7px);}
-  40%{transform:translateX(7px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}
-}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-7px);}40%{transform:translateX(7px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
 @keyframes flashGreen{0%{transform:scale(1);}40%{transform:scale(1.06);}100%{transform:scale(1);}}
 @keyframes popIn{from{transform:scale(.5);opacity:0;}to{transform:scale(1);opacity:1;}}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
 </style>
 </head>
 <body>
 
-<!-- ══════════════ SETUP SCREEN ══════════════ -->
-<div id="setup-screen">
+<!-- ══ DIFFICULTY SCREEN ══ -->
+<div id="diff-screen">
   <h1>⚡ MATHE-TAUZIEHEN ⚡</h1>
-  <p class="setup-sub">Lade ein Bild hoch oder gib ein Thema ein – die KI generiert passende Aufgaben!</p>
-
-  <div id="setup-box">
-    <div>
-      <label class="setup-label">📚 Thema / Kontext (optional)</label>
-      <input id="topic-input" type="text"
-        placeholder="z. B. Pizzabacken, Handball-WM, Reise nach Paris …" />
+  <p class="dsub">Wählt euer Schwierigkeitsniveau – dann kann das Ziehen beginnen!</p>
+  <div id="diff-cards">
+    <div class="diff-card easy" onclick="startGame('easy')">
+      <div class="diff-emoji">🟢</div>
+      <div class="diff-title">LEICHT</div>
+      <div class="diff-desc">Rationale Zahlen<br>Grundrechenarten<br>ganze Zahlen & einfache Dezimalzahlen</div>
+      <div class="diff-count">80 AUFGABEN</div>
     </div>
-
-    <div>
-      <label class="setup-label">🖼️ Bild oder Aufgabenblatt hochladen (optional)</label>
-      <div id="upload-zone">
-        <input type="file" id="file-input" accept="image/*" />
-        <div class="upload-icon">📎</div>
-        <p><strong>Bild hier ablegen</strong> oder klicken zum Auswählen<br>
-          (JPG, PNG – wird als Kontext für die Aufgaben genutzt)</p>
-        <img id="img-preview" alt="Vorschau" />
-      </div>
+    <div class="diff-card medium" onclick="startGame('medium')">
+      <div class="diff-emoji">🟡</div>
+      <div class="diff-title">MITTEL</div>
+      <div class="diff-desc">Rationale Zahlen<br>Gemischte Terme<br>einfache Brüche & Dezimalzahlen</div>
+      <div class="diff-count">80 AUFGABEN</div>
     </div>
-
-    <div id="setup-status">Ohne Angabe werden zufällige Bruchaufgaben generiert.</div>
-    <button id="start-btn">🎮 Spiel starten!</button>
+    <div class="diff-card hard" onclick="startGame('hard')">
+      <div class="diff-emoji">🔴</div>
+      <div class="diff-title">SCHWER</div>
+      <div class="diff-desc">Potenzen · Bruchterme<br>Mehrschrittige Terme<br>Prozent & Klammern</div>
+      <div class="diff-count">80 AUFGABEN</div>
+    </div>
   </div>
 </div>
 
-<!-- ══════════════ GAME SCREEN ══════════════ -->
+<!-- ══ GAME SCREEN ══ -->
 <div id="game-screen">
   <div id="header">
     <h1>⚡ MATHE-TAUZIEHEN</h1>
-    <div id="score-display">
+    <div id="header-right">
+      <div id="diff-badge"></div>
       <div class="score-box red">🔴 <span id="score-red">0</span></div>
       <div class="score-box blue">🔵 <span id="score-blue">0</span></div>
+      <div id="lead-badge">Ziel: +4</div>
     </div>
   </div>
-
   <div id="task-area">
-    <div id="task-context">Aufgabe</div>
-    <div id="task-text">Lade…</div>
+    <div id="task-context">Rationale Zahlen</div>
+    <div id="task-text">–</div>
   </div>
-
-  <div id="game-canvas-wrap">
-    <canvas id="gameCanvas"></canvas>
-  </div>
-
+  <div id="game-canvas-wrap"><canvas id="gameCanvas"></canvas></div>
   <div id="input-row">
-    <!-- ROT -->
     <div class="team-panel red">
       <div class="team-label red">🔴 Team ROT</div>
       <div class="answer-row">
@@ -290,8 +166,6 @@ canvas{display:block;width:100%;height:100%;}
       <div class="numpad" id="numpad-red"></div>
       <div class="feedback-msg red" id="feedback-red"></div>
     </div>
-
-    <!-- BLAU -->
     <div class="team-panel blue">
       <div class="team-label blue">🔵 Team BLAU</div>
       <div class="answer-row">
@@ -304,7 +178,6 @@ canvas{display:block;width:100%;height:100%;}
   </div>
 </div>
 
-<!-- WINNER -->
 <div id="winner-overlay">
   <div id="winner-box">
     <div id="winner-emoji">🏆</div>
@@ -312,185 +185,377 @@ canvas{display:block;width:100%;height:100%;}
     <div id="winner-sub"></div>
     <div class="winner-btns">
       <button id="restart-btn">🔄 Nochmal!</button>
-      <button id="newgame-btn">🏠 Neues Thema</button>
+      <button id="back-btn">📋 Niveau wählen</button>
     </div>
   </div>
 </div>
 
 <script>
+// ══════════════════════════════════════════════════════════════
+//  AUFGABENPOOLS  (je 80 Aufgaben)
+//  a = exakter numerischer Wert, Toleranz 0.002
+// ══════════════════════════════════════════════════════════════
+
+const POOL = {
+
+// ─────────────────────────────────────────────────────────────
+//  LEICHT – Klasse 6/7 · ganze Zahlen & einfache Dezimalzahlen
+// ─────────────────────────────────────────────────────────────
+easy: [
+  // Addition & Subtraktion ganzer Zahlen (20)
+  { t:'(−5) + (−3) = ?',         a: -8   },
+  { t:'(−8) + 3 = ?',            a: -5   },
+  { t:'7 + (−10) = ?',           a: -3   },
+  { t:'(−12) + 5 = ?',           a: -7   },
+  { t:'(−4) − 6 = ?',            a: -10  },
+  { t:'(−9) − (−4) = ?',         a: -5   },
+  { t:'6 − (−3) = ?',            a:  9   },
+  { t:'(−15) + 15 = ?',          a:  0   },
+  { t:'(−7) + (−7) = ?',         a: -14  },
+  { t:'12 + (−5) = ?',           a:  7   },
+  { t:'(−3) − (−3) = ?',         a:  0   },
+  { t:'(−20) + 8 = ?',           a: -12  },
+  { t:'(−1) − 9 = ?',            a: -10  },
+  { t:'0 + (−6) = ?',            a: -6   },
+  { t:'(−11) + 4 = ?',           a: -7   },
+  { t:'15 − (−5) = ?',           a:  20  },
+  { t:'(−6) + (−8) + 4 = ?',     a: -10  },
+  { t:'10 − (−10) = ?',          a:  20  },
+  { t:'(−3) + (−5) + 8 = ?',     a:  0   },
+  { t:'(−14) − (−6) = ?',        a: -8   },
+  // Multiplikation ganzer Zahlen (20)
+  { t:'(−3) · 5 = ?',            a: -15  },
+  { t:'(−4) · (−6) = ?',         a:  24  },
+  { t:'7 · (−3) = ?',            a: -21  },
+  { t:'(−8) · 2 = ?',            a: -16  },
+  { t:'(−5) · (−5) = ?',         a:  25  },
+  { t:'(−2) · 9 = ?',            a: -18  },
+  { t:'6 · (−7) = ?',            a: -42  },
+  { t:'(−10) · (−4) = ?',        a:  40  },
+  { t:'(−1) · (−1) = ?',         a:  1   },
+  { t:'(−3) · (−3) = ?',         a:  9   },
+  { t:'(−11) · 2 = ?',           a: -22  },
+  { t:'(−4) · 0 = ?',            a:  0   },
+  { t:'(−6) · (−3) = ?',         a:  18  },
+  { t:'(−9) · 4 = ?',            a: -36  },
+  { t:'(−2) · (−7) = ?',         a:  14  },
+  { t:'5 · (−8) = ?',            a: -40  },
+  { t:'(−3) · 4 · (−1) = ?',     a:  12  },
+  { t:'(−2) · (−2) · (−2) = ?',  a: -8   },
+  { t:'(−6) · (−1) · 3 = ?',     a:  18  },
+  { t:'(−5) · 2 · (−3) = ?',     a:  30  },
+  // Division ganzer Zahlen (20)
+  { t:'(−20) : 4 = ?',           a: -5   },
+  { t:'(−30) : (−6) = ?',        a:  5   },
+  { t:'42 : (−7) = ?',           a: -6   },
+  { t:'(−24) : 3 = ?',           a: -8   },
+  { t:'(−36) : (−4) = ?',        a:  9   },
+  { t:'(−56) : 8 = ?',           a: -7   },
+  { t:'(−15) : (−5) = ?',        a:  3   },
+  { t:'(−81) : 9 = ?',           a: -9   },
+  { t:'(−64) : (−8) = ?',        a:  8   },
+  { t:'0 : (−7) = ?',            a:  0   },
+  { t:'(−72) : 9 = ?',           a: -8   },
+  { t:'(−28) : (−4) = ?',        a:  7   },
+  { t:'(−49) : 7 = ?',           a: -7   },
+  { t:'(−18) : (−3) = ?',        a:  6   },
+  { t:'(−100) : 10 = ?',         a: -10  },
+  { t:'(−32) : (−8) = ?',        a:  4   },
+  { t:'(−54) : 6 = ?',           a: -9   },
+  { t:'(−45) : (−9) = ?',        a:  5   },
+  { t:'(−16) : 4 = ?',           a: -4   },
+  { t:'(−63) : (−7) = ?',        a:  9   },
+  // Einfache Dezimalzahlen (20)
+  { t:'(−1,5) + (−2,5) = ?',     a: -4   },
+  { t:'(−3,5) − (−1,5) = ?',     a: -2   },
+  { t:'(−0,5) · 8 = ?',          a: -4   },
+  { t:'(−4,5) + 2 = ?',          a: -2.5 },
+  { t:'(−2,5) · (−4) = ?',       a:  10  },
+  { t:'(−6,4) : 8 = ?',          a: -0.8 },
+  { t:'(−1,5) · (−6) = ?',       a:  9   },
+  { t:'(−3,6) : (−4) = ?',       a:  0.9 },
+  { t:'2,5 + (−4,5) = ?',        a: -2   },
+  { t:'(−0,4) · 5 = ?',          a: -2   },
+  { t:'(−7,5) : (−2,5) = ?',     a:  3   },
+  { t:'(−1,5) + (−1,5) = ?',     a: -3   },
+  { t:'(−0,6) · (−10) = ?',      a:  6   },
+  { t:'(−4,4) : 4 = ?',          a: -1.1 },
+  { t:'(−2,5) + 3,5 = ?',        a:  1   },
+  { t:'(−0,8) · (−5) = ?',       a:  4   },
+  { t:'(−9,9) : (−3) = ?',       a:  3.3 },
+  { t:'(−5,5) − (−3,5) = ?',     a: -2   },
+  { t:'(−1,2) · (−5) = ?',       a:  6   },
+  { t:'(−7,2) : 8 = ?',          a: -0.9 },
+],
+
+// ─────────────────────────────────────────────────────────────
+//  MITTEL – Klasse 7/8 · gemischte Terme, einfache Brüche
+// ─────────────────────────────────────────────────────────────
+medium: [
+  // Gemischte Terme (25)
+  { t:'(−3) · 4 + 7 = ?',           a:  -5   },
+  { t:'5 − (−2) · 6 = ?',           a:  17   },
+  { t:'(−8) : 2 − 3 = ?',           a:  -7   },
+  { t:'(−4)² − 20 = ?',             a:  -4   },
+  { t:'3 · (−5) + 4 · 4 = ?',       a:   1   },
+  { t:'(−6) · (−3) − 20 = ?',       a:  -2   },
+  { t:'10 − 4 · (−3) = ?',          a:  22   },
+  { t:'(−9) + 3 · (−4) = ?',        a: -21   },
+  { t:'(−5)² − 3 · 8 = ?',          a:   1   },
+  { t:'(−7) · 2 + (−1) · (−6) = ?', a:  -8   },
+  { t:'4 · (−3) : (−6) = ?',        a:   2   },
+  { t:'(−18) : 3 + (−4) = ?',       a: -10   },
+  { t:'(−2) · 5 − (−4) · 3 = ?',    a:   2   },
+  { t:'(−3)³ + 30 = ?',             a:   3   },
+  { t:'(−4)² − (−2)³ = ?',          a:  24   },
+  { t:'3 · (−2)² − 10 = ?',         a:   2   },
+  { t:'(−5) · (−3) − 6 · (−2) = ?', a:  27   },
+  { t:'(−2)⁴ − 20 = ?',             a:  -4   },
+  { t:'4 − (−3)² = ?',              a:  -5   },
+  { t:'(−1)⁹ · 7 + 8 = ?',          a:   1   },
+  { t:'(−3) · (−4) − (−2) · 5 = ?', a:  22   },
+  { t:'(−6)² : (−9) = ?',           a:  -4   },
+  { t:'(−2)³ · (−3) + 5 = ?',       a:  29   },
+  { t:'(−5) · 4 + (−3) · (−6) = ?', a:  -2   },
+  { t:'(−7) · (−2) − (−3) · 4 = ?', a:  26   },
+  // Brüche: Addition & Subtraktion (20)
+  { t:'(−1/2) + (−1/4) = ?',        a: -0.75 },
+  { t:'3/4 − (−1/4) = ?',           a:  1    },
+  { t:'(−5/2) + 3/2 = ?',           a: -1    },
+  { t:'1/2 − (−3/2) = ?',           a:  2    },
+  { t:'(−5/6) + 1/6 = ?',           a: -2/3  },
+  { t:'(−2/3) + (−1/3) = ?',        a: -1    },
+  { t:'3/5 − (−2/5) = ?',           a:  1    },
+  { t:'(−3/4) + 1/2 = ?',           a: -0.25 },
+  { t:'(−7/8) + 3/8 = ?',           a: -0.5  },
+  { t:'5/6 − (−1/6) = ?',           a:  1    },
+  { t:'(−4/5) + (−1/5) = ?',        a: -1    },
+  { t:'(−1/3) − (−2/3) = ?',        a:  1/3  },
+  { t:'7/10 + (−3/10) = ?',         a:  0.4  },
+  { t:'(−5/4) + 3/4 = ?',           a: -0.5  },
+  { t:'(−3/8) − (−5/8) = ?',        a:  0.25 },
+  { t:'(−2/5) + (−3/5) = ?',        a: -1    },
+  { t:'9/10 − (−1/10) = ?',         a:  1    },
+  { t:'(−7/6) + 1/6 = ?',           a: -1    },
+  { t:'(−1/4) − (−3/4) = ?',        a:  0.5  },
+  { t:'(−5/3) + 2/3 = ?',           a: -1    },
+  // Brüche: Multiplikation & Division (20)
+  { t:'(−2/3) · (−3/2) = ?',        a:  1    },
+  { t:'(−3/4) · 8 = ?',             a: -6    },
+  { t:'(−1/3) · (−9) = ?',          a:  3    },
+  { t:'(−4/5) : (−2/5) = ?',        a:  2    },
+  { t:'(−3/8) · 4 = ?',             a: -1.5  },
+  { t:'(−1/2) · (−1/2) = ?',        a:  0.25 },
+  { t:'(−2/3) · 6 = ?',             a: -4    },
+  { t:'(−3/5) : (−3/10) = ?',       a:  2    },
+  { t:'(−5/4) · 4 = ?',             a: -5    },
+  { t:'(−1/4) : (1/2) = ?',         a: -0.5  },
+  { t:'(−3/7) · (−7) = ?',          a:  3    },
+  { t:'(−4/3) : (−4/3) = ?',        a:  1    },
+  { t:'(−2/5) · (−15) = ?',         a:  6    },
+  { t:'(−7/2) : (7/4) = ?',         a: -2    },
+  { t:'(−1/6) · (−18) = ?',         a:  3    },
+  { t:'(−5/8) : (−5/4) = ?',        a:  0.5  },
+  { t:'(−3/4) · (−12) = ?',         a:  9    },
+  { t:'(−2/9) · (−9/2) = ?',        a:  1    },
+  { t:'(−5/3) : (5/6) = ?',         a: -2    },
+  { t:'(−1/8) · (−8) = ?',          a:  1    },
+  // Dezimal & Bruch gemischt (15)
+  { t:'(−0,5) · (−4) + 1 = ?',      a:  3    },
+  { t:'(−1,5) + (−1/2) = ?',        a: -2    },
+  { t:'(−0,75) + 3/4 = ?',          a:  0    },
+  { t:'(−1,2) : (−0,4) = ?',        a:  3    },
+  { t:'(−0,25) · (−8) = ?',         a:  2    },
+  { t:'(−2,5) + 5/2 = ?',           a:  0    },
+  { t:'(−0,5)² = ?',                a:  0.25 },
+  { t:'(−3,6) : (−0,9) = ?',        a:  4    },
+  { t:'(−1,5) · (−4/3) = ?',        a:  2    },
+  { t:'(−0,4) + (−3/5) = ?',        a: -1    },
+  { t:'(−0,3)² = ?',                a:  0.09 },
+  { t:'(−1,2) · (−2,5) = ?',        a:  3    },
+  { t:'(−7,2) : (−0,8) = ?',        a:  9    },
+  { t:'(−0,5)³ = ?',                a: -0.125},
+  { t:'(−2,4) · (−1,5) = ?',        a:  3.6  },
+],
+
+// ─────────────────────────────────────────────────────────────
+//  SCHWER – Klasse 8/9 · Potenzen, Bruchterme, Prozent
+// ─────────────────────────────────────────────────────────────
+hard: [
+  // Terme: Potenzen + Operationen (10)
+  { t:'(−3)² − 4·(−5) = ?',                 a:  29          },
+  { t:'(−2)³ + 5·(−3) = ?',                 a: -23          },
+  { t:'6·(−4) + (−3)² = ?',                 a: -15          },
+  { t:'(−5)² − (−3)³ = ?',                  a:  52          },
+  { t:'−2·(3−7)² = ?',                      a: -32          },
+  { t:'(−4)²:(−2)³ = ?',                    a:  -2          },
+  { t:'3·(−2)³ − (−10) = ?',                a: -14          },
+  { t:'(−6)²:(−4) + 5 = ?',                 a:  -4          },
+  { t:'(−2)·(−3)² + 7 = ?',                 a: -11          },
+  { t:'4·(−1,5)² − 3 = ?',                  a:   6          },
+  // Brüche: Addition & Subtraktion (10)
+  { t:'(−3/4) + (−5/8) = ?',                a: -11/8        },
+  { t:'(−7/6) − (−1/3) = ?',                a:  -5/6        },
+  { t:'5/9 + (−2/3) = ?',                   a:  -1/9        },
+  { t:'(−5/8) − 3/4 = ?',                   a: -11/8        },
+  { t:'(−4/3) + 7/12 = ?',                  a:  -3/4        },
+  { t:'3/10 − (−7/5) = ?',                  a:   3/2        },
+  { t:'(−5/12) + (−1/4) = ?',               a:  -2/3        },
+  { t:'7/8 − (−3/8) = ?',                   a:   5/4        },
+  { t:'(−2/9) + (−4/9) = ?',                a:  -2/3        },
+  { t:'(−5/6) − (−7/12) = ?',               a:  -1/4        },
+  // Brüche: Multiplikation & Division (10)
+  { t:'(−3/4)·(−8/9) = ?',                  a:   2/3        },
+  { t:'(−5/6)·(−3/10) = ?',                 a:   1/4        },
+  { t:'(−7/8):(−7/4) = ?',                  a:   1/2        },
+  { t:'(−4/5):(2/15) = ?',                  a:  -6          },
+  { t:'(−3/8)·(−4/3) = ?',                  a:   1/2        },
+  { t:'(5/6):(−5/3) = ?',                   a:  -1/2        },
+  { t:'(−9/10)·(−5/3) = ?',                 a:   3/2        },
+  { t:'(−4/7):(−8/21) = ?',                 a:   3/2        },
+  { t:'(−5/9)·(−18/25) = ?',                a:   2/5        },
+  { t:'(−7/12):(7/4) = ?',                  a:  -1/3        },
+  // Gemischte Bruchterme (10)
+  { t:'(−3/4)·8 − (−1/2) = ?',              a:  -5.5        },
+  { t:'(−2/3):(−4) + 1/6 = ?',              a:   5/12       },
+  { t:'3/5·(−10) + (−4) = ?',               a: -10          },
+  { t:'(−5/8)·(−4) − 3/2 = ?',              a:   1          },
+  { t:'(−1/3)·9 + (−2/3)·6 = ?',            a:  -7          },
+  { t:'(−4/5)·(−15) + (−3) = ?',            a:   9          },
+  { t:'5/6·(−12) + (−7) = ?',               a: -17          },
+  { t:'(−7/4):(1/2) + 3 = ?',               a:  -1/2        },
+  { t:'(−3/8)·(−8) − (−5/2) = ?',           a:   5.5        },
+  { t:'2/3·(−9) + 4·(−3/2) = ?',            a: -12          },
+  // Dezimal · Bruch gemischt (10)
+  { t:'(−0,75)·(−4/3) = ?',                 a:   1          },
+  { t:'(−1,5):(3/4) = ?',                   a:  -2          },
+  { t:'(−0,4)·(−5/2) = ?',                  a:   1          },
+  { t:'(−1,2):(−3/5) = ?',                  a:   2          },
+  { t:'(−2,5)·(−2/5) = ?',                  a:   1          },
+  { t:'(−0,6):(3/5) = ?',                   a:  -1          },
+  { t:'(−1,75)·(−4/7) = ?',                 a:   1          },
+  { t:'(−0,8):(−4/5) = ?',                  a:   1          },
+  { t:'(−1,5)·(−2/3) + (−1) = ?',           a:   0          },
+  { t:'(−0,25):(1/4) + (−1) = ?',           a:  -2          },
+  // Terme mit Klammern & Vorzeichen (10)
+  { t:'−(2−5)² + 4 = ?',                    a:  -5          },
+  { t:'−((−3)²−10) = ?',                    a:   1          },
+  { t:'(−2−3)·(4−7) = ?',                   a:  15          },
+  { t:'(5−9)²·(−2) = ?',                    a: -32          },
+  { t:'(−3+7)·(−2−3) = ?',                  a: -20          },
+  { t:'−(4−9)·(−3) = ?',                    a: -15          },
+  { t:'(−6−4):(−2+7) = ?',                  a:  -2          },
+  { t:'(−3)² − (4−7)² = ?',                 a:   0          },
+  { t:'−(−2+5)³ = ?',                       a: -27          },
+  { t:'(−4+1)² − (−2)³ = ?',                a:  17          },
+  // Mehrschrittige Terme (10)
+  { t:'3·(−4)² − 2·(−3)² = ?',              a:  30          },
+  { t:'(−2)⁴ − (−3)·5 = ?',                 a:  31          },
+  { t:'(−5)² + (−2)³·3 = ?',                a:   1          },
+  { t:'4·(−3)² − (−2)⁴ = ?',                a:  20          },
+  { t:'(−1)⁵·(−2)³ + 10 = ?',               a:  18          },
+  { t:'(−3)²·(−2)² − 50 = ?',               a: -14          },
+  { t:'(−2)⁵ + (−1)¹⁰·33 = ?',              a:   1          },
+  { t:'(−4)·(−3)² + (−2)⁴ = ?',             a: -20          },
+  { t:'(−3)³:(−9) + (−2)³ = ?',             a:  -5          },
+  { t:'(−2)³·(−5) − (−4)² = ?',             a:  24          },
+  // Prozent & rationale Zahlen (10)
+  { t:'−15 % von 80 = ?',                   a: -12          },
+  { t:'25 % von (−48) = ?',                 a: -12          },
+  { t:'(−60)·0,3 + 5 = ?',                  a: -13          },
+  { t:'40 % von (−35) = ?',                 a: -14          },
+  { t:'(−120)·0,25 + 8 = ?',                a: -22          },
+  { t:'75 % von (−24) = ?',                 a: -18          },
+  { t:'(−50)·0,6 − (−5) = ?',               a: -25          },
+  { t:'20 % von (−65) + 3 = ?',             a: -10          },
+  { t:'(−80)·0,35 + (−8) = ?',              a: -36          },
+  { t:'60 % von (−45) = ?',                 a: -27          },
+],
+};
+
 // ════════════════════════════════════════════════════
-//  SETUP
+//  STATE
 // ════════════════════════════════════════════════════
-let uploadedImageB64 = null;
-let uploadedMediaType = 'image/jpeg';
-let topicText = '';
-let aiTaskPool = [];
-let usedIdx = new Set();
+const WIN_LEAD = 4;
+let currentDiff = null;
+let scoreRed=0, scoreBlue=0;
+let currentTask=null, usedIdx=new Set();
+let cooldownRed=false, cooldownBlue=false, taskLocked=false;
+let animTarget=0, animCurrent=0, animating=false;
+let pullingTeam=null, pulsingTimer=0, ropeWiggle=0;
 
-document.getElementById('file-input').addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const img = document.getElementById('img-preview');
-    img.src = ev.target.result;
-    img.style.display = 'block';
-    uploadedImageB64 = ev.target.result.split(',')[1];
-    uploadedMediaType = file.type || 'image/jpeg';
-  };
-  reader.readAsDataURL(file);
-  document.getElementById('setup-status').textContent = `📎 "${file.name}" geladen – bereit!`;
-});
+const DIFF_META = {
+  easy:   { label:'🟢 LEICHT', ctx:'Rationale Zahlen · Klasse 6/7' },
+  medium: { label:'🟡 MITTEL', ctx:'Rationale Zahlen · Klasse 7/8' },
+  hard:   { label:'🔴 SCHWER', ctx:'Rationale Zahlen · Klasse 8/9' },
+};
 
-document.getElementById('start-btn').addEventListener('click', async () => {
-  topicText = document.getElementById('topic-input').value.trim();
-  document.getElementById('setup-screen').style.display = 'none';
-  document.getElementById('game-screen').style.display = 'flex';
-  initCanvas();
-  buildNumpads();
-  bindEvents();
-  render();
-  await loadTaskPool();
-  nextTask();
-});
+function startGame(diff){
+  currentDiff = diff;
+  scoreRed=0; scoreBlue=0; usedIdx.clear(); taskLocked=false;
+  cooldownRed=false; cooldownBlue=false; animCurrent=0; animTarget=0;
 
-// ════════════════════════════════════════════════════
-//  AI TASKS
-// ════════════════════════════════════════════════════
-async function loadTaskPool() {
-  document.getElementById('task-text').textContent = '⏳ KI generiert Aufgaben…';
-  document.getElementById('task-text').classList.add('loading');
+  document.getElementById('diff-screen').style.display='none';
+  const gs=document.getElementById('game-screen');
+  gs.style.display='flex';
 
-  const instructions = `Du bist Mathe-Lehrer. Erstelle GENAU 12 Rechenaufgaben mit rationalen Zahlen (Brüche, negative Zahlen) und den 4 Grundrechenarten.
-Antworte NUR mit einem JSON-Array, ohne Text oder Backticks.
-Jedes Objekt hat:
-- "task": Aufgabe als String, Brüche mit / (z.B. "3/4 + 1/2 = ?")
-- "answer_n": Zähler der gekürzten Bruchantwort (ganzzahlig)
-- "answer_d": Nenner (ganzzahlig, positiv)
-- "hint": 1 Satz thematischer Kontext${topicText ? ` zum Thema "${topicText}"` : ''}
-Nenner ≤ 12, alle 4 Operatoren variieren. Ergebnisse überschaubar.`;
+  const badge=document.getElementById('diff-badge');
+  badge.textContent=DIFF_META[diff].label;
+  badge.className=''; badge.classList.add(diff);
+  document.getElementById('task-context').textContent=DIFF_META[diff].ctx;
+  document.getElementById('score-red').textContent='0';
+  document.getElementById('score-blue').textContent='0';
+  updateBadge();
 
-  let userContent;
-  if (uploadedImageB64) {
-    userContent = [
-      { type: 'image', source: { type: 'base64', media_type: uploadedMediaType, data: uploadedImageB64 } },
-      { type: 'text', text: instructions + '\nBeziehe die Aufgaben auf das Bild.' }
-    ];
-  } else {
-    userContent = instructions;
-  }
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: userContent }]
-      })
-    });
-    const data = await res.json();
-    const raw = data.content.map(b => b.text || '').join('').trim().replace(/```json|```/g, '');
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed) && parsed.length > 0) {
-      aiTaskPool = parsed;
-      if (topicText) document.getElementById('task-context').textContent = `📚 ${topicText}`;
-      else if (uploadedImageB64) document.getElementById('task-context').textContent = '🖼️ Aufgabe aus Bild';
-    }
-  } catch { aiTaskPool = []; }
-
-  document.getElementById('task-text').classList.remove('loading');
-}
-
-// ════════════════════════════════════════════════════
-//  LOCAL TASK FALLBACK
-// ════════════════════════════════════════════════════
-function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
-function simplify({n, d}) {
-  if (d < 0) { n=-n; d=-d; }
-  const g = gcd(Math.abs(n), d);
-  return {n: n/g, d: d/g};
-}
-function randFrac() {
-  const d = Math.floor(Math.random()*9)+2;
-  const n = Math.floor(Math.random()*(d*2-1))+1-d;
-  return {n: n===0?1:n, d};
-}
-function fracStr({n,d}) {
-  if (d===1||n%d===0) return String(n/d);
-  return `${n<0?'-':''}${Math.abs(n)}/${d}`;
-}
-function addF(a,b){return simplify({n:a.n*b.d+b.n*a.d,d:a.d*b.d});}
-function subF(a,b){return simplify({n:a.n*b.d-b.n*a.d,d:a.d*b.d});}
-function mulF(a,b){return simplify({n:a.n*b.n,d:a.d*b.d});}
-function divF(a,b){return simplify({n:a.n*b.d,d:a.d*b.n});}
-
-function genLocalTask() {
-  const ops=['+','-','·','÷'];
-  for(let i=0;i<30;i++){
-    const a=randFrac(), b=randFrac();
-    const op=ops[Math.floor(Math.random()*4)];
-    if(op==='÷'&&b.n===0) continue;
-    let r;
-    if(op==='+')r=addF(a,b);
-    else if(op==='-')r=subF(a,b);
-    else if(op==='·')r=mulF(a,b);
-    else r=divF(a,b);
-    if(r.d===0||Math.abs(r.n)>50||r.d>20) continue;
-    return {task:`${fracStr(a)} ${op} ${fracStr(b)} = ?`, answer_n:r.n, answer_d:r.d, hint:''};
-  }
-}
-
-let currentTask = null;
-function nextTask() {
-  let t;
-  if (aiTaskPool.length > 0) {
-    const available = aiTaskPool.filter((_,i)=>!usedIdx.has(i));
-    if (available.length===0) usedIdx.clear();
-    const pool = aiTaskPool.filter((_,i)=>!usedIdx.has(i));
-    const pick = Math.floor(Math.random()*pool.length);
-    usedIdx.add(aiTaskPool.indexOf(pool[pick]));
-    t = pool[pick];
-  } else {
-    t = genLocalTask();
-  }
-  currentTask = t;
-  document.getElementById('task-text').textContent = t.task;
-}
-
-// ════════════════════════════════════════════════════
-//  CANVAS + RENDER
-// ════════════════════════════════════════════════════
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-let W=0, H=0;
-
-function initCanvas() {
   resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-}
-function resizeCanvas() {
-  const wrap = document.getElementById('game-canvas-wrap');
-  W = wrap.clientWidth; H = wrap.clientHeight;
-  canvas.width = W; canvas.height = H;
+  if(!numpadsBuilt){ buildNumpads(); numpadsBuilt=true; }
+  render();
+  nextTask();
 }
 
-// ── Background ──
-function drawBackground() {
-  const sky = ctx.createLinearGradient(0,0,0,H*.68);
+// ════════════════════════════════════════════════════
+//  TASK
+// ════════════════════════════════════════════════════
+function nextTask(){
+  const pool=POOL[currentDiff];
+  if(usedIdx.size>=pool.length) usedIdx.clear();
+  const avail=pool.map((_,i)=>i).filter(i=>!usedIdx.has(i));
+  const pick=avail[Math.floor(Math.random()*avail.length)];
+  usedIdx.add(pick);
+  currentTask=pool[pick];
+  document.getElementById('task-text').textContent=currentTask.t;
+}
+
+function parseAnswer(str){
+  str=str.trim().replace(',','.');
+  if(str.includes('/')){
+    const p=str.split('/');
+    if(p.length===2){const n=parseFloat(p[0]),d=parseFloat(p[1]);if(!isNaN(n)&&!isNaN(d)&&d!==0)return n/d;}
+  }
+  const v=parseFloat(str); return isNaN(v)?null:v;
+}
+
+// ════════════════════════════════════════════════════
+//  CANVAS
+// ════════════════════════════════════════════════════
+const canvas=document.getElementById('gameCanvas');
+const ctx=canvas.getContext('2d');
+let W=0,H=0;
+
+function resizeCanvas(){
+  const wrap=document.getElementById('game-canvas-wrap');
+  W=wrap.clientWidth; H=wrap.clientHeight;
+  canvas.width=W; canvas.height=H;
+}
+
+function drawBG(){
+  const sky=ctx.createLinearGradient(0,0,0,H*.68);
   sky.addColorStop(0,'#87ceeb'); sky.addColorStop(1,'#c5e8f5');
   ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
-
-  drawCloud(W*.1, H*.12, .65);
-  drawCloud(W*.54, H*.07, .85);
-  drawCloud(W*.84, H*.14, .58);
-
+  drawCloud(W*.1,H*.1,.65); drawCloud(W*.54,H*.07,.85); drawCloud(W*.84,H*.14,.58);
   const ground=ctx.createLinearGradient(0,H*.68,0,H);
   ground.addColorStop(0,'#795548'); ground.addColorStop(1,'#3e2723');
   ctx.fillStyle=ground; ctx.fillRect(0,H*.68,W,H*.32);
-
-  // Grass
   ctx.fillStyle='#4caf50';
   ctx.beginPath(); ctx.ellipse(W/2,H*.68,W*.62,H*.055,0,0,Math.PI*2); ctx.fill();
   ctx.fillStyle='#66bb6a';
@@ -500,7 +565,6 @@ function drawBackground() {
     ctx.closePath(); ctx.fill();
   }
 }
-
 function drawCloud(x,y,sc){
   ctx.save(); ctx.translate(x,y); ctx.scale(sc,sc);
   ctx.fillStyle='rgba(255,255,255,.8)';
@@ -509,333 +573,205 @@ function drawCloud(x,y,sc){
   });
   ctx.restore();
 }
-
-// ── Stick figures ──
-function drawFigure(x, y, color, facing, pulling, idx) {
-  const t = Date.now()/500+idx;
-  const leg = pulling ? Math.sin(t*3)*9 : 0;
-  const lean = pulling ? facing*-5 : 0;
-  const sc = Math.min(1, W/600);
-  const s = Math.max(0.55, sc);
-
+function ropeYatX(rx,ropeCx,ropeW,ropeY){
+  const t=(rx-(ropeCx-ropeW/2))/ropeW;
+  return ropeY+Math.sin(t*Math.PI*3+ropeWiggle)*3;
+}
+function drawFigure(x,y,color,facing,pulling,idx,handX,handY){
+  const t=Date.now()/500+idx;
+  const leg=pulling?Math.sin(t*3)*9:0;
+  const lean=pulling?facing*-5:0;
+  const s=Math.max(0.55,Math.min(1,W/600));
   ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
-  ctx.strokeStyle=color; ctx.lineWidth=2.5; ctx.lineCap='round'; ctx.lineJoin='round';
-
-  // Head
-  ctx.fillStyle=color;
-  ctx.beginPath(); ctx.arc(0,-25,8,0,Math.PI*2); ctx.fill();
-  // Eyes
-  ctx.fillStyle='rgba(255,255,255,.8)';
-  ctx.beginPath(); ctx.arc(facing*2.5,-26.5,1.8,0,Math.PI*2); ctx.fill();
-
-  // Body
+  const lhx=(handX-x)/s, lhy=(handY-y)/s;
+  ctx.strokeStyle=color; ctx.lineWidth=2.8; ctx.lineCap='round'; ctx.lineJoin='round';
+  ctx.fillStyle=color; ctx.beginPath(); ctx.arc(0,-25,8,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.8)'; ctx.beginPath(); ctx.arc(facing*2.5,-26.5,1.8,0,Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.moveTo(0,-17); ctx.lineTo(lean,0); ctx.stroke();
-  // Arms
-  ctx.beginPath(); ctx.moveTo(0,-13); ctx.lineTo(facing*16+lean*.4,-9+Math.sin(t*2)*2.5); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0,-13); ctx.lineTo(lhx,lhy); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(0,-13); ctx.lineTo(-facing*9,-3+Math.sin(t*2+1)*2.5); ctx.stroke();
-  // Legs
+  ctx.fillStyle=color; ctx.beginPath(); ctx.arc(lhx,lhy,3.5,0,Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.moveTo(lean,0); ctx.lineTo(lean-6+leg*.35,19); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(lean,0); ctx.lineTo(lean+6-leg*.35,19); ctx.stroke();
-
   ctx.restore();
 }
-
-function drawTeam(cx, facing, color, pulling, shake) {
-  const count=5;
-  const sp=Math.min(36,W*.038);
-  const sx=cx-sp*(count-1)/2;
-  const baseY=H*.6;
+function drawTeam(cx,facing,color,pulling,shake,ropeHandX,ropeW,ropeY,ropeCx){
+  const count=5, sp=Math.min(36,W*.038);
+  const sx=cx-sp*(count-1)/2, baseY=H*.6;
   for(let i=0;i<count;i++){
-    const x=sx+i*sp+(shake?(Math.random()-.5)*3:0);
-    drawFigure(x, baseY, color, facing, pulling, i);
+    const figX=sx+i*sp+(shake?(Math.random()-.5)*3:0);
+    const isFront=facing===-1?i===count-1:i===0;
+    let hx,hy;
+    if(isFront){ hx=ropeHandX; hy=ropeYatX(ropeHandX,ropeCx,ropeW,ropeY); }
+    else{ hx=figX+facing*Math.min(28,sp*.8); hy=baseY-13*Math.min(1,W/600); }
+    drawFigure(figX,baseY,color,facing,pulling,i,hx,hy);
   }
 }
-
-// ── Rope ──
-let ropeWiggle=0;
-function drawRope(pos) {
-  const shift = (pos/WIN_STEP)*W*.13;
-  const cx = W/2 + shift;
-  const ropeY = H*.515;
-  const ropeW = Math.min(260, W*.29);
-  ropeWiggle += 0.05;
-
-  // Shadow
-  ctx.save(); ctx.globalAlpha=.13;
-  ctx.fillStyle='#000';
-  ctx.beginPath(); ctx.ellipse(cx,ropeY+9,ropeW/2,6,0,0,Math.PI*2); ctx.fill();
-  ctx.restore();
-
-  // Rope
-  const segs=26;
-  const x0=cx-ropeW/2, x1=cx+ropeW/2;
+function drawRope(pos){
+  const cx=W/2+(pos/WIN_LEAD)*W*.13;
+  const ropeY=H*.52, ropeW=Math.min(260,W*.29);
+  ropeWiggle+=0.05;
+  ctx.save(); ctx.globalAlpha=.12; ctx.fillStyle='#000';
+  ctx.beginPath(); ctx.ellipse(cx,ropeY+9,ropeW/2,6,0,0,Math.PI*2); ctx.fill(); ctx.restore();
+  const segs=26, x0=cx-ropeW/2, x1=cx+ropeW/2;
   for(let i=0;i<segs;i++){
-    const t=i/segs;
-    const rx=x0+(x1-x0)*t;
+    const t=i/segs, rx=x0+(x1-x0)*t;
     const ry=ropeY+Math.sin(t*Math.PI*3+ropeWiggle)*3;
-    const rw=ropeW/segs+1;
-    const rh=Math.max(10,H*.032);
+    const rw=ropeW/segs+1, rh=Math.max(10,H*.032);
     const g=ctx.createLinearGradient(rx,ry-rh/2,rx,ry+rh/2);
     g.addColorStop(0,'#e6c97a'); g.addColorStop(.4,'#c8a26a');
     g.addColorStop(.7,'#8d6e63'); g.addColorStop(1,'#c8a26a');
-    ctx.fillStyle=g;
-    ctx.beginPath(); ctx.roundRect(rx,ry-rh/2,rw,rh,2); ctx.fill();
+    ctx.fillStyle=g; ctx.beginPath(); ctx.roundRect(rx,ry-rh/2,rw,rh,2); ctx.fill();
     ctx.strokeStyle='rgba(0,0,0,.1)'; ctx.lineWidth=1;
     ctx.beginPath(); ctx.moveTo(rx,ry-rh/2+2); ctx.lineTo(rx+rw,ry+rh/2-2); ctx.stroke();
   }
-
-  // Center flag
   ctx.fillStyle='#e74c3c';
   ctx.beginPath(); ctx.moveTo(cx-4,ropeY-16); ctx.lineTo(cx+12,ropeY-10); ctx.lineTo(cx-4,ropeY-4);
   ctx.closePath(); ctx.fill();
   ctx.strokeStyle='#7f0000'; ctx.lineWidth=1.8;
   ctx.beginPath(); ctx.moveTo(cx-4,ropeY-18); ctx.lineTo(cx-4,ropeY+10); ctx.stroke();
+  return {cx,ropeY,ropeW};
 }
-
-// ── PROGRESS BAR drawn in canvas, directly above the rope/figures ──
-// Visualized as ground-marker lines + colored zone on the playing field
-function drawProgressVisualization(pos) {
-  // We draw two things:
-  // 1) A slim progress strip just above the figures (in the sky area)
-  // 2) Ground zone markers under the team feet
-
-  const pct = pos / WIN_STEP; // -1..+1, negative=red ahead
-  const stripY = H*.25;
-  const stripW = Math.min(480, W*.52);
-  const stripH = Math.max(16, H*.042);
-  const stripX = (W-stripW)/2;
-  const r = stripH/2;
-
-  // ── Strip background ──
-  ctx.save(); ctx.globalAlpha=.7;
-  ctx.fillStyle='rgba(0,0,0,.3)';
-  ctx.beginPath(); ctx.roundRect(stripX,stripY,stripW,stripH,r); ctx.fill();
+function drawProgressBar(pos){
+  const pct=pos/WIN_LEAD;
+  const bw=Math.min(440,W*.48), bh=Math.max(16,H*.04);
+  const bx=(W-bw)/2, by=H*.27, r=bh/2;
+  ctx.save(); ctx.globalAlpha=.22; ctx.fillStyle='#000';
+  ctx.beginPath(); ctx.roundRect(bx+2,by+4,bw,bh,r); ctx.fill(); ctx.restore();
+  ctx.fillStyle='rgba(0,0,0,.32)'; ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,r); ctx.fill();
+  ctx.save(); ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,r); ctx.clip();
+  ctx.fillStyle='#e74c3c'; ctx.fillRect(bx,by,bw/2,bh);
+  ctx.fillStyle='#2980b9'; ctx.fillRect(bx+bw/2,by,bw/2,bh);
+  ctx.globalAlpha=.28;
+  ctx.fillStyle='#ff1744'; ctx.fillRect(bx,by,bw/WIN_LEAD,bh);
+  ctx.fillStyle='#0d47a1'; ctx.fillRect(bx+bw*(1-1/WIN_LEAD),by,bw/WIN_LEAD,bh);
   ctx.restore();
-
-  // ── Red fill (left) ──
-  const midX = stripX+stripW/2;
-  ctx.save(); ctx.beginPath(); ctx.roundRect(stripX,stripY,stripW,stripH,r); ctx.clip();
-  // red side
-  ctx.fillStyle='#e74c3c';
-  ctx.fillRect(stripX,stripY, stripW/2, stripH);
-  // blue side
-  ctx.fillStyle='#2980b9';
-  ctx.fillRect(midX,stripY, stripW/2, stripH);
+  ctx.save(); ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,r); ctx.clip();
+  ctx.globalAlpha=.06; ctx.strokeStyle='#fff'; ctx.lineWidth=4;
+  for(let sx=bx-bh;sx<bx+bw+bh;sx+=18){ctx.beginPath();ctx.moveTo(sx,by);ctx.lineTo(sx+bh,by+bh);ctx.stroke();}
   ctx.restore();
-
-  // ── Win zone highlights ──
-  ctx.save(); ctx.beginPath(); ctx.roundRect(stripX,stripY,stripW,stripH,r); ctx.clip();
-  ctx.globalAlpha=.35;
-  ctx.fillStyle='#ff1744';
-  ctx.fillRect(stripX, stripY, stripW/WIN_STEP, stripH);
-  ctx.fillStyle='#0d47a1';
-  ctx.fillRect(stripX+stripW*(1-1/WIN_STEP), stripY, stripW/WIN_STEP, stripH);
-  ctx.restore();
-
-  // ── Diagonal stripes overlay ──
-  ctx.save(); ctx.beginPath(); ctx.roundRect(stripX,stripY,stripW,stripH,r); ctx.clip();
-  ctx.globalAlpha=.07; ctx.strokeStyle='#fff'; ctx.lineWidth=4;
-  for(let sx=stripX-stripH;sx<stripX+stripW+stripH;sx+=18){
-    ctx.beginPath(); ctx.moveTo(sx,stripY); ctx.lineTo(sx+stripH,stripY+stripH); ctx.stroke();
-  }
-  ctx.restore();
-
-  // ── Moving indicator (the key progress element) ──
-  const thumbX = midX + pct*(stripW/2);
-  const thumbR = r+5;
-
-  // Glow
+  const thumbX=bx+bw/2+pct*(bw/2), thumbR=r+5;
   ctx.save();
-  const gl=ctx.createRadialGradient(thumbX,stripY+r,0,thumbX,stripY+r,thumbR*2.2);
-  gl.addColorStop(0,'rgba(255,255,220,.6)');
-  gl.addColorStop(1,'rgba(255,255,220,0)');
-  ctx.fillStyle=gl;
-  ctx.beginPath(); ctx.arc(thumbX,stripY+r,thumbR*2.2,0,Math.PI*2); ctx.fill();
-  ctx.restore();
-
-  ctx.fillStyle='#fff';
-  ctx.beginPath(); ctx.arc(thumbX,stripY+r,thumbR,0,Math.PI*2); ctx.fill();
+  const gl=ctx.createRadialGradient(thumbX,by+r,0,thumbX,by+r,thumbR*2.5);
+  gl.addColorStop(0,'rgba(255,255,220,.5)'); gl.addColorStop(1,'rgba(255,255,220,0)');
+  ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(thumbX,by+r,thumbR*2.5,0,Math.PI*2); ctx.fill(); ctx.restore();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(thumbX,by+r,thumbR,0,Math.PI*2); ctx.fill();
   ctx.strokeStyle='rgba(0,0,0,.4)'; ctx.lineWidth=2.5;
-  ctx.beginPath(); ctx.arc(thumbX,stripY+r,thumbR,0,Math.PI*2); ctx.stroke();
-
-  // Arrow inside thumb showing direction
-  if (Math.abs(pos) > 0.05) {
-    const arrowDir = pos < 0 ? -1 : 1;
-    ctx.fillStyle = pos < 0 ? '#e74c3c' : '#2980b9';
-    ctx.font = `bold ${thumbR}px Arial`;
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText(arrowDir < 0 ? '◀' : '▶', thumbX, stripY+r);
+  ctx.beginPath(); ctx.arc(thumbX,by+r,thumbR,0,Math.PI*2); ctx.stroke();
+  ctx.font=`bold ${Math.max(10,bh*.5)}px Nunito`;
+  ctx.textBaseline='middle'; ctx.fillStyle='rgba(255,255,255,.9)';
+  ctx.textAlign='left'; ctx.fillText(`ROT ${scoreRed}`,bx+10,by+r);
+  ctx.textAlign='right'; ctx.fillText(`${scoreBlue} BLAU`,bx+bw-10,by+r);
+  const diff=Math.abs(scoreRed-scoreBlue);
+  if(diff>0){
+    ctx.font=`bold ${Math.max(9,bh*.42)}px Nunito`;
+    ctx.textAlign='center'; ctx.fillStyle='rgba(255,255,180,.85)';
+    ctx.fillText(`${scoreRed>scoreBlue?'ROT':'BLAU'} führt +${diff}  (Ziel: +${WIN_LEAD})`,W/2,by+bh+10);
   }
-
-  // ── ROT / BLAU labels ──
-  ctx.font=`bold ${Math.max(10,stripH*.52)}px Nunito`;
-  ctx.textBaseline='middle'; ctx.textAlign='left';
-  ctx.fillStyle='rgba(255,255,255,.85)';
-  ctx.fillText('🔴 ROT', stripX+8, stripY+r);
-  ctx.textAlign='right';
-  ctx.fillText('BLAU 🔵', stripX+stripW-8, stripY+r);
-
-  // ── Ground zone markers: colored patches under each team ──
-  const ropeCx = W/2 + pct*W*.13;
-  const gap = Math.min(175, W*.2);
-  const redCx = ropeCx-gap, blueCx = ropeCx+gap;
-  const groundY = H*.65;
-  const zoneW = Math.min(130, W*.15);
-  const zoneH = H*.025;
-
-  // Red zone
-  ctx.save(); ctx.globalAlpha=.35;
-  ctx.fillStyle='#e74c3c';
-  ctx.beginPath(); ctx.ellipse(redCx,groundY,zoneW/2,zoneH,0,0,Math.PI*2); ctx.fill();
-  ctx.restore();
-  // Blue zone
-  ctx.save(); ctx.globalAlpha=.35;
-  ctx.fillStyle='#2980b9';
-  ctx.beginPath(); ctx.ellipse(blueCx,groundY,zoneW/2,zoneH,0,0,Math.PI*2); ctx.fill();
-  ctx.restore();
-
-  // Win-zone boundary lines on ground
-  const winShift = W*.13;
-  ctx.save(); ctx.globalAlpha=.6;
-  // Red win boundary
-  ctx.strokeStyle='#e74c3c'; ctx.lineWidth=3;
-  ctx.setLineDash([6,4]);
-  ctx.beginPath();
-  ctx.moveTo(W/2-winShift, H*.64);
-  ctx.lineTo(W/2-winShift, H*.72);
-  ctx.stroke();
-  // Blue win boundary
-  ctx.strokeStyle='#2980b9';
-  ctx.beginPath();
-  ctx.moveTo(W/2+winShift, H*.64);
-  ctx.lineTo(W/2+winShift, H*.72);
-  ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.restore();
 }
 
-// ── Render loop ──
-const WIN_STEP = 7;
-let ropePos=0, scoreRed=0, scoreBlue=0;
-let animTarget=0, animCurrent=0, animating=false;
-let pullingTeam=null, pulsingTimer=0;
-let cooldownRed=false, cooldownBlue=false;
-
-function render() {
-  if(!W||!H){ requestAnimationFrame(render); return; }
+let rafRunning=false;
+function render(){
+  if(!W||!H){requestAnimationFrame(render);return;}
   ctx.clearRect(0,0,W,H);
-  drawBackground();
-
+  drawBG();
   if(animating){
     animCurrent+=(animTarget-animCurrent)*.09;
-    if(Math.abs(animCurrent-animTarget)<.008){ animCurrent=animTarget; animating=false; pullingTeam=null; }
+    if(Math.abs(animCurrent-animTarget)<.008){animCurrent=animTarget;animating=false;pullingTeam=null;}
   }
   if(pulsingTimer>0) pulsingTimer--;
-
   const pos=animCurrent;
-  const ropeCx=W/2+(pos/WIN_STEP)*W*.13;
-  const gap=Math.min(175,W*.2);
-
-  drawProgressVisualization(pos);
-  drawTeam(ropeCx-gap,-1,'#e74c3c',true,pullingTeam==='red'&&pulsingTimer>0);
-  drawTeam(ropeCx+gap, 1,'#2980b9',true,pullingTeam==='blue'&&pulsingTimer>0);
+  const ropeCx=W/2+(pos/WIN_LEAD)*W*.13;
+  const ropeY=H*.52, ropeW=Math.min(260,W*.29);
+  const gap=Math.min(165,W*.19);
+  drawProgressBar(pos);
+  drawTeam(ropeCx-gap,-1,'#e74c3c',true,pullingTeam==='red'&&pulsingTimer>0,ropeCx-ropeW/2+8,ropeW,ropeY,ropeCx);
+  drawTeam(ropeCx+gap, 1,'#2980b9',true,pullingTeam==='blue'&&pulsingTimer>0,ropeCx+ropeW/2-8,ropeW,ropeY,ropeCx);
   drawRope(pos);
-
   requestAnimationFrame(render);
 }
 
 // ════════════════════════════════════════════════════
 //  NUMPAD
 // ════════════════════════════════════════════════════
-function buildNumpads(){
-  buildNumpad('numpad-red','red');
-  buildNumpad('numpad-blue','blue');
-}
-function buildNumpad(id, team){
+let numpadsBuilt=false;
+function buildNumpads(){buildNumpad('numpad-red','red');buildNumpad('numpad-blue','blue');}
+function buildNumpad(id,team){
   const keys=[
     {l:'7',v:'7'},{l:'8',v:'8'},{l:'9',v:'9'},{l:'⌫',v:'back',cls:'del'},
     {l:'4',v:'4'},{l:'5',v:'5'},{l:'6',v:'6'},{l:'/',v:'/',cls:'op'},
     {l:'1',v:'1'},{l:'2',v:'2'},{l:'3',v:'3'},{l:'−',v:'-',cls:'op'},
-    {l:'0',v:'0'},{l:',',v:','},{l:'.',v:'.',cls:'op'},
-    {l:'✔',v:'ok',cls:`accent-${team}`}
+    {l:'0',v:'0'},{l:',',v:','},{l:'.',v:'.',cls:'op'},{l:'✔',v:'ok',cls:'accent-'+team}
   ];
   const c=document.getElementById(id);
   keys.forEach(k=>{
     const btn=document.createElement('button');
     btn.className='nk '+(k.cls||'');
     btn.textContent=k.l;
-    btn.addEventListener('pointerdown', e=>{
-      e.preventDefault();
-      handleNumpad(team, k.v);
-    });
+    btn.addEventListener('pointerdown',e=>{e.preventDefault();handleNumpad(team,k.v);});
     c.appendChild(btn);
   });
 }
-function handleNumpad(team, val){
-  if(team==='red'&&cooldownRed) return;
-  if(team==='blue'&&cooldownBlue) return;
-  const input=document.getElementById(`input-${team}`);
-  if(val==='back') input.value=input.value.slice(0,-1);
+function handleNumpad(team,val){
+  if(taskLocked)return;
+  if(team==='red'&&cooldownRed)return;
+  if(team==='blue'&&cooldownBlue)return;
+  const inp=document.getElementById('input-'+team);
+  if(val==='back') inp.value=inp.value.slice(0,-1);
   else if(val==='ok') checkAnswer(team);
-  else input.value+=val;
+  else inp.value+=val;
 }
 
 // ════════════════════════════════════════════════════
 //  ANSWER CHECK
 // ════════════════════════════════════════════════════
-function parseAnswer(str){
-  str=str.trim().replace(',','.');
-  if(str.includes('/')){
-    const p=str.split('/');
-    if(p.length===2){const n=parseFloat(p[0]),d=parseFloat(p[1]);if(!isNaN(n)&&!isNaN(d)&&d!==0)return n/d;}
-  }
-  const v=parseFloat(str); return isNaN(v)?null:v;
-}
-function correctVal(t){ return t.answer_n/t.answer_d; }
-
 function checkAnswer(team){
-  if(!currentTask) return;
-  if(team==='red'&&cooldownRed) return;
-  if(team==='blue'&&cooldownBlue) return;
-  const inputEl=document.getElementById(`input-${team}`);
-  const feedbackEl=document.getElementById(`feedback-${team}`);
-  const val=parseAnswer(inputEl.value);
-
-  if(val===null){ feedbackEl.textContent='⚠ Ungültige Eingabe'; flashInput(inputEl,'wrong'); return; }
-
-  const ok=Math.abs(val-correctVal(currentTask))<0.0002;
+  if(!currentTask||taskLocked)return;
+  if(team==='red'&&cooldownRed)return;
+  if(team==='blue'&&cooldownBlue)return;
+  const inp=document.getElementById('input-'+team);
+  const fb=document.getElementById('feedback-'+team);
+  const val=parseAnswer(inp.value);
+  if(val===null){fb.textContent='⚠ Ungültige Eingabe';flashInput(inp,'wrong');return;}
+  const ok=Math.abs(val-currentTask.a)<0.002;
   if(ok){
-    feedbackEl.textContent='✔ Richtig! Zug!';
-    flashInput(inputEl,'correct');
-    inputEl.value='';
-    if(team==='red'){ ropePos--; scoreRed++; document.getElementById('score-red').textContent=scoreRed; }
-    else            { ropePos++; scoreBlue++; document.getElementById('score-blue').textContent=scoreBlue; }
-    animTarget=ropePos; animating=true; pullingTeam=team; pulsingTimer=38;
-    setTimeout(()=>{ feedbackEl.textContent=''; },1500);
-    if(Math.abs(ropePos)>=WIN_STEP) setTimeout(()=>showWinner(team),700);
-    else setTimeout(nextTask,400);
-    setCooldown(team,900);
+    taskLocked=true; cooldownRed=true; cooldownBlue=true;
+    fb.textContent='✔ Richtig! Zug!';
+    flashInput(inp,'correct');
+    // Beide Felder sofort leeren
+    document.getElementById('input-red').value='';
+    document.getElementById('input-blue').value='';
+    const otherFb=document.getElementById('feedback-'+(team==='red'?'blue':'red'));
+    otherFb.textContent='⬅ Zu langsam!';
+    setTimeout(()=>{ otherFb.textContent=''; },1200);
+    if(team==='red'){scoreRed++;document.getElementById('score-red').textContent=scoreRed;}
+    else            {scoreBlue++;document.getElementById('score-blue').textContent=scoreBlue;}
+    const lead=scoreBlue-scoreRed;
+    animTarget=lead; animating=true; pullingTeam=team; pulsingTimer=38;
+    updateBadge();
+    setTimeout(()=>{ fb.textContent=''; },1200);
+    if(Math.abs(scoreRed-scoreBlue)>=WIN_LEAD){
+      setTimeout(()=>showWinner(team),700);
+    } else {
+      setTimeout(()=>{ taskLocked=false; cooldownRed=false; cooldownBlue=false; nextTask(); },700);
+    }
   } else {
-    feedbackEl.textContent='✗ Falsch – nochmal!';
-    flashInput(inputEl,'wrong');
-    setTimeout(()=>{ feedbackEl.textContent=''; },1500);
-    setCooldown(team,900);
+    fb.textContent='✗ Falsch – nochmal!';
+    flashInput(inp,'wrong');
+    inp.value='';
+    setTimeout(()=>{ fb.textContent=''; },1200);
   }
 }
 
-function setCooldown(team,ms){
-  const input=document.getElementById(`input-${team}`);
-  input.disabled=true;
-  if(team==='red') cooldownRed=true; else cooldownBlue=true;
-  setTimeout(()=>{
-    input.disabled=false;
-    if(team==='red') cooldownRed=false; else cooldownBlue=false;
-  },ms);
+function updateBadge(){
+  const diff=Math.abs(scoreRed-scoreBlue);
+  const b=document.getElementById('lead-badge');
+  if(diff===0) b.textContent='Ziel: +'+WIN_LEAD;
+  else{const l=scoreRed>scoreBlue?'🔴':'🔵'; b.textContent=l+' +'+diff+' / '+WIN_LEAD;}
 }
 function flashInput(el,cls){
-  el.classList.remove('correct','wrong'); void el.offsetWidth;
-  el.classList.add(cls);
-  setTimeout(()=>el.classList.remove(cls),600);
+  el.classList.remove('correct','wrong');void el.offsetWidth;
+  el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),600);
 }
 
 // ════════════════════════════════════════════════════
@@ -845,36 +781,27 @@ function showWinner(team){
   const t=document.getElementById('winner-title');
   t.textContent=team==='red'?'🔴 Team ROT gewinnt!':'🔵 Team BLAU gewinnt!';
   t.className=team==='red'?'red':'blue';
-  document.getElementById('winner-sub').textContent=`Glückwunsch! ROT ${scoreRed} – BLAU ${scoreBlue}`;
+  document.getElementById('winner-sub').textContent=
+    `ROT ${scoreRed} : ${scoreBlue} BLAU — +${WIN_LEAD} Punkte Vorsprung!`;
   document.getElementById('winner-overlay').classList.add('show');
   confettiBurst();
 }
-
-function restartSame(){
-  ropePos=0; animCurrent=0; animTarget=0;
-  scoreRed=0; scoreBlue=0;
-  document.getElementById('score-red').textContent='0';
-  document.getElementById('score-blue').textContent='0';
-  document.getElementById('feedback-red').textContent='';
-  document.getElementById('feedback-blue').textContent='';
-  document.getElementById('input-red').value='';
-  document.getElementById('input-blue').value='';
+function restart(){
+  scoreRed=0; scoreBlue=0; animCurrent=0; animTarget=0;
+  taskLocked=false; cooldownRed=false; cooldownBlue=false;
+  ['red','blue'].forEach(t=>{
+    document.getElementById('score-'+t).textContent='0';
+    document.getElementById('feedback-'+t).textContent='';
+    document.getElementById('input-'+t).value='';
+    document.getElementById('input-'+t).disabled=false;
+  });
   document.getElementById('winner-overlay').classList.remove('show');
-  usedIdx.clear(); nextTask();
+  updateBadge(); usedIdx.clear(); nextTask();
 }
-function goSetup(){
-  ropePos=0; animCurrent=0; animTarget=0;
-  scoreRed=0; scoreBlue=0; aiTaskPool=[]; usedIdx.clear();
-  uploadedImageB64=null; topicText='';
+function goBack(){
   document.getElementById('winner-overlay').classList.remove('show');
   document.getElementById('game-screen').style.display='none';
-  document.getElementById('setup-screen').style.display='flex';
-  document.getElementById('score-red').textContent='0';
-  document.getElementById('score-blue').textContent='0';
-  document.getElementById('img-preview').style.display='none';
-  document.getElementById('topic-input').value='';
-  document.getElementById('task-context').textContent='Aufgabe';
-  document.getElementById('setup-status').textContent='Ohne Angabe werden zufällige Bruchaufgaben generiert.';
+  document.getElementById('diff-screen').style.display='flex';
 }
 
 // ════════════════════════════════════════════════════
@@ -887,25 +814,26 @@ function confettiBurst(){
     el.style.cssText=`position:fixed;width:9px;height:9px;border-radius:2px;
       background:${cols[i%cols.length]};left:${Math.random()*100}vw;top:-10px;
       z-index:400;pointer-events:none;
-      animation:confettiFall ${1.5+Math.random()*2}s ease-in forwards;
+      animation:cf ${1.5+Math.random()*2}s ease-in forwards;
       animation-delay:${Math.random()*.5}s;transform:rotate(${Math.random()*360}deg);`;
     document.body.appendChild(el);
     setTimeout(()=>el.remove(),3500);
   }
 }
 const cs=document.createElement('style');
-cs.textContent='@keyframes confettiFall{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}';
+cs.textContent='@keyframes cf{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}';
 document.head.appendChild(cs);
 
 // ════════════════════════════════════════════════════
-//  EVENTS
+//  INIT
 // ════════════════════════════════════════════════════
-function bindEvents(){
-  document.getElementById('btn-red').addEventListener('click',()=>checkAnswer('red'));
-  document.getElementById('btn-blue').addEventListener('click',()=>checkAnswer('blue'));
-  document.getElementById('restart-btn').addEventListener('click',restartSame);
-  document.getElementById('newgame-btn').addEventListener('click',goSetup);
-}
+window.addEventListener('resize',resizeCanvas);
+document.getElementById('btn-red').addEventListener('click',()=>checkAnswer('red'));
+document.getElementById('btn-blue').addEventListener('click',()=>checkAnswer('blue'));
+document.getElementById('restart-btn').addEventListener('click',restart);
+document.getElementById('back-btn').addEventListener('click',goBack);
+// Start render loop immediately so canvas is ready
+render();
 </script>
 </body>
 </html>
