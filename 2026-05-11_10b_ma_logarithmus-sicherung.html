@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Logarithmusfunktion – Sicherung</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: #f5f7fb; color: #1f2a44;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  body { min-height: 100vh; padding: 20px; display: flex; justify-content: center; }
+  .app {
+    width: 100%; max-width: 760px;
+    background: #ffffff; border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(33, 50, 90, 0.08);
+    overflow: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
+    color: white; padding: 22px 26px;
+  }
+  header h1 { margin: 0 0 4px; font-size: 22px; font-weight: 700; }
+  header p { margin: 0; font-size: 14px; opacity: 0.9; }
+  .progress-wrap {
+    background: rgba(255,255,255,0.25);
+    height: 6px; border-radius: 99px; overflow: hidden;
+    margin-top: 14px;
+  }
+  .progress-bar { height: 100%; background: #fbbf24; width: 0%; transition: width 300ms ease; border-radius: 99px; }
+  main { padding: 26px; }
+  .question-num { color: #6b7280; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .question-text { font-size: 18px; font-weight: 600; line-height: 1.45; margin: 0 0 20px; }
+  .figure { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; margin: 0 0 18px; text-align: center; }
+  .figure svg { max-width: 100%; height: auto; }
+  .options { display: grid; gap: 12px; }
+  .option {
+    background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px;
+    padding: 16px 18px; font-size: 16px; cursor: pointer;
+    transition: all 150ms ease; text-align: left; min-height: 56px;
+    display: flex; align-items: center; gap: 12px;
+    color: #1f2a44; user-select: none;
+  }
+  .option:hover { border-color: #7c3aed; background: #f5f3ff; }
+  .option.selected { border-color: #7c3aed; background: #ede9fe; }
+  .option.correct { border-color: #16a34a; background: #dcfce7; }
+  .option.wrong { border-color: #dc2626; background: #fee2e2; }
+  .option.disabled { cursor: default; opacity: 0.7; }
+  .option .marker { width: 28px; height: 28px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: #64748b; flex-shrink: 0; }
+  .option.correct .marker { background: #16a34a; color: white; }
+  .option.wrong .marker { background: #dc2626; color: white; }
+  .input-row { display: flex; gap: 10px; align-items: center; margin: 0 0 12px; flex-wrap: wrap; }
+  .input-row label { font-size: 16px; font-weight: 500; }
+  input[type="text"], input[type="number"] {
+    font-size: 18px; font-weight: 600; padding: 10px 14px; min-width: 160px;
+    border: 2px solid #e2e8f0; border-radius: 10px;
+    text-align: center; color: #1f2a44; background: white;
+    -webkit-appearance: none; font-family: inherit;
+  }
+  input:focus { outline: none; border-color: #7c3aed; background: #f5f3ff; }
+  .input-row.correct input { border-color: #16a34a; background: #dcfce7; }
+  .input-row.wrong input { border-color: #dc2626; background: #fee2e2; }
+  .feedback { margin: 18px 0 0; padding: 14px 16px; border-radius: 10px; font-size: 15px; line-height: 1.5; }
+  .feedback.right { background: #dcfce7; color: #166534; }
+  .feedback.wrong { background: #fee2e2; color: #991b1b; }
+  .feedback strong { font-weight: 700; }
+  .actions { margin-top: 22px; display: flex; gap: 10px; flex-wrap: wrap; }
+  button.btn {
+    background: #7c3aed; color: white; border: none;
+    padding: 14px 24px; font-size: 16px; font-weight: 600;
+    border-radius: 12px; cursor: pointer; flex: 1;
+    min-height: 52px; min-width: 140px;
+    transition: background 150ms ease;
+  }
+  button.btn:hover:not(:disabled) { background: #6d28d9; }
+  button.btn:disabled { background: #cbd5e1; cursor: default; }
+  .summary { padding: 30px 26px; text-align: center; }
+  .summary .score-circle {
+    width: 130px; height: 130px; border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
+    color: white; margin: 0 auto 18px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+  }
+  .summary .score-circle .num { font-size: 36px; font-weight: 700; line-height: 1; }
+  .summary .score-circle .lbl { font-size: 12px; opacity: 0.9; margin-top: 4px; }
+  .summary h2 { margin: 0 0 8px; font-size: 22px; }
+  .summary p { color: #64748b; margin: 0 0 24px; }
+  .review { text-align: left; margin: 22px 0; }
+  .review-item { padding: 12px 14px; border-radius: 10px; margin-bottom: 8px; font-size: 14px; display: flex; gap: 10px; align-items: flex-start; }
+  .review-item.right { background: #f0fdf4; }
+  .review-item.wrong { background: #fef2f2; }
+  .review-item .icon { width: 24px; height: 24px; flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: white; }
+  .review-item.right .icon { background: #16a34a; }
+  .review-item.wrong .icon { background: #dc2626; }
+  .hint { font-size: 13px; color: #6b7280; margin-top: 8px; font-style: italic; }
+  @media (max-width: 480px) { header h1 { font-size: 20px; } main { padding: 20px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Logarithmusfunktion – Sicherung</h1>
+    <p>Klasse 10B · Mathematik · 10 Aufgaben · EdM Kap. 4.9</p>
+    <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  </header>
+  <main id="main"></main>
+</div>
+
+<script>
+  function logSVG(opts) {
+    const { base = 2, shiftX = 0, shiftY = 0, color = '#7c3aed' } = opts;
+    const W = 380, H = 260, padX = 30, padY = 20;
+    const xMin = -3, xMax = 7, yMin = -4, yMax = 4;
+    const sx = (W - 2*padX) / (xMax - xMin);
+    const sy = (H - 2*padY) / (yMax - yMin);
+    const X = x => padX + (x - xMin) * sx;
+    const Y = y => H - padY - (y - yMin) * sy;
+    let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+    // Grid
+    for (let x = Math.ceil(xMin); x <= xMax; x++) {
+      svg += `<line x1="${X(x)}" y1="${padY}" x2="${X(x)}" y2="${H-padY}" stroke="#e2e8f0" stroke-width="0.5"/>`;
+    }
+    for (let y = Math.ceil(yMin); y <= yMax; y++) {
+      svg += `<line x1="${padX}" y1="${Y(y)}" x2="${W-padX}" y2="${Y(y)}" stroke="#e2e8f0" stroke-width="0.5"/>`;
+    }
+    // Axes
+    svg += `<line x1="${X(xMin)}" y1="${Y(0)}" x2="${X(xMax)}" y2="${Y(0)}" stroke="#475569" stroke-width="1.5"/>`;
+    svg += `<line x1="${X(0)}" y1="${Y(yMin)}" x2="${X(0)}" y2="${Y(yMax)}" stroke="#475569" stroke-width="1.5"/>`;
+    // Asymptote x = shiftX
+    if (shiftX !== 0) {
+      svg += `<line x1="${X(shiftX)}" y1="${padY}" x2="${X(shiftX)}" y2="${H-padY}" stroke="#dc2626" stroke-width="1" stroke-dasharray="4,4"/>`;
+    }
+    // Function path: y = log_base(x - shiftX) + shiftY
+    let path = '';
+    for (let i = 0; i <= 200; i++) {
+      const x = xMin + (xMax - xMin) * i / 200;
+      const arg = x - shiftX;
+      if (arg <= 0.001) continue;
+      const y = Math.log(arg) / Math.log(base) + shiftY;
+      if (y < yMin - 0.5 || y > yMax + 0.5) continue;
+      path += (path ? ' L ' : 'M ') + X(x).toFixed(1) + ',' + Y(y).toFixed(1);
+    }
+    svg += `<path d="${path}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round"/>`;
+    // Labels
+    svg += `<text x="${W-padX-2}" y="${Y(0)-4}" font-size="11" fill="#475569" text-anchor="end">x</text>`;
+    svg += `<text x="${X(0)+4}" y="${padY+10}" font-size="11" fill="#475569">y</text>`;
+    svg += `</svg>`;
+    return svg;
+  }
+
+  const QUESTIONS = [
+    { id: 1, type: 'numeric',
+      text: 'Berechne ohne Taschenrechner: log₂(8) = ?',
+      correct: 3, tolerance: 0,
+      explain: 'log₂(8) ist die Antwort auf die Frage: 2 hoch wieviel ergibt 8? Wegen 2³ = 8 ist log₂(8) = 3.' },
+
+    { id: 2, type: 'numeric',
+      text: 'Berechne ohne Taschenrechner: log₃(81) = ?',
+      correct: 4, tolerance: 0,
+      explain: '3⁴ = 81, also log₃(81) = 4.' },
+
+    { id: 3, type: 'mc',
+      text: 'Welcher Wert ist für jede Logarithmusfunktion logᵇ(x) gleich – egal welche Basis b > 0, b ≠ 1?',
+      options: [ 'logᵇ(0) = 0', 'logᵇ(1) = 0', 'logᵇ(b) = 0', 'logᵇ(b²) = 0' ],
+      correct: 1,
+      explain: 'b⁰ = 1 für jede Basis b ≠ 0, also logᵇ(1) = 0. Alle Logarithmusgraphen schneiden die x-Achse bei P(1|0).' },
+
+    { id: 4, type: 'mc',
+      text: 'Was ist der Definitionsbereich D der Funktion f mit f(x) = log₂(x)?',
+      options: [ 'D = ℝ', 'D = ℝ \\ {0}', 'D = (0; ∞), also x > 0', 'D = [1; ∞)' ],
+      correct: 2,
+      explain: 'Eine Logarithmusfunktion ist nur für positive Argumente definiert: D = ℝ⁺ = (0; ∞). Das hängt direkt mit der Definition zusammen, denn b^y > 0 für jede Basis b > 0.' },
+
+    { id: 5, type: 'mc',
+      text: 'Welcher Wertebereich gehört zur Funktion f mit f(x) = log₂(x)?',
+      options: [ 'W = ℝ⁺', 'W = ℝ', 'W = [0; ∞)', 'W = (1; ∞)' ],
+      correct: 1,
+      explain: 'Der Graph einer Logarithmusfunktion durchläuft alle reellen Werte: W = ℝ. Für x → 0⁺ gehen die Werte gegen −∞, für x → ∞ gegen +∞ (bei Basis b > 1).' },
+
+    { id: 6, type: 'mc',
+      figure: logSVG({ base: 2, shiftX: 0, shiftY: 0, color: '#7c3aed' }),
+      text: 'Der gezeigte Graph gehört zur Funktion f(x) = log₂(x). Welches Monotonieverhalten hat sie?',
+      options: [
+        'streng monoton fallend für alle x > 0',
+        'streng monoton steigend für alle x > 0',
+        'erst fallend, dann steigend',
+        'nicht monoton'
+      ],
+      correct: 1,
+      explain: 'Für jede Basis b > 1 ist logᵇ streng monoton steigend. Wäre 0 < b < 1, wäre die Funktion streng monoton fallend.' },
+
+    { id: 7, type: 'mc',
+      figure: logSVG({ base: 2, shiftX: 3, shiftY: 0, color: '#7c3aed' }),
+      text: 'Welche Funktionsgleichung passt zu dem Graphen (Asymptote ist als rote gestrichelte Linie eingezeichnet)?',
+      options: [
+        'f(x) = log₂(x − 3)',
+        'f(x) = log₂(x) − 3',
+        'f(x) = log₂(x + 3)',
+        'f(x) = log₂(x) + 3'
+      ],
+      correct: 0,
+      explain: 'Der Graph entsteht durch Verschiebung um 3 Einheiten nach rechts: x wird durch x − 3 ersetzt. Die senkrechte Asymptote x = 0 verschiebt sich entsprechend nach x = 3.' },
+
+    { id: 8, type: 'mc',
+      text: 'Wie verändert sich die Asymptote der Funktion f(x) = log₂(x) bei der Verschiebung g(x) = log₂(x + 4) − 1?',
+      options: [
+        'sie bleibt x = 0',
+        'sie wird zu x = 4',
+        'sie wird zu x = −4',
+        'sie wird zu y = −1'
+      ],
+      correct: 2,
+      explain: 'Innenverschiebung x → x + 4 bedeutet 4 nach links: die Asymptote x = 0 wird zu x = −4. Die Außenverschiebung −1 (1 nach unten) verändert die senkrechte Asymptote nicht.' },
+
+    { id: 9, type: 'mc',
+      text: 'Welche Aussage zur Grundeigenschaft des Logarithmus ist richtig?',
+      options: [
+        'logᵇ(a) + logᵇ(c) = logᵇ(a + c)',
+        'logᵇ(a) + logᵇ(c) = logᵇ(a · c)',
+        'logᵇ(a) · logᵇ(c) = logᵇ(a · c)',
+        'logᵇ(a) − logᵇ(c) = logᵇ(a − c)'
+      ],
+      correct: 1,
+      explain: 'Grundeigenschaft (Logarithmusgesetz): logᵇ(a · c) = logᵇ(a) + logᵇ(c). Multiplikation im Argument wird zur Addition der Logarithmuswerte. Vergleiche EdM S.163 (4).' },
+
+    { id: 10, type: 'numeric',
+      text: 'Eine Logarithmusfunktion hat die Form f(x) = log₂(x − c). Aus dem Graphen liest du die senkrechte Asymptote x = 5 ab. Wie groß ist c?',
+      correct: 5, tolerance: 0,
+      explain: 'Die Asymptote der Grundfunktion log₂(x) ist x = 0. Bei f(x) = log₂(x − c) verschiebt sich die Asymptote zu x = c. Aus x = 5 folgt c = 5.' }
+  ];
+
+  let currentIdx = 0;
+  let answers = [];
+  const main = document.getElementById('main');
+  const progressBar = document.getElementById('progressBar');
+
+  function updateProgress() {
+    progressBar.style.width = (currentIdx / QUESTIONS.length * 100) + '%';
+  }
+
+  function renderQuestion() {
+    updateProgress();
+    if (currentIdx >= QUESTIONS.length) { renderSummary(); return; }
+    const q = QUESTIONS[currentIdx];
+    let html = `<div class="question-num">Aufgabe ${currentIdx + 1} von ${QUESTIONS.length}</div>`;
+    html += `<h2 class="question-text">${q.text}</h2>`;
+    if (q.figure) html += `<div class="figure">${q.figure}</div>`;
+    if (q.type === 'mc') {
+      html += `<div class="options" id="optionsList">`;
+      q.options.forEach((opt, i) => {
+        const letter = String.fromCharCode(65 + i);
+        html += `<button class="option" data-idx="${i}"><span class="marker">${letter}</span><span>${opt}</span></button>`;
+      });
+      html += `</div>`;
+    } else if (q.type === 'numeric') {
+      html += `<div class="input-row" id="inputRow"><label>Antwort:</label><input type="number" id="numAnswer" inputmode="numeric" autocomplete="off" step="any"></div>`;
+    }
+    html += `<div id="feedback"></div><div class="actions"><button class="btn" id="checkBtn" disabled>Antwort prüfen</button></div>`;
+    main.innerHTML = html;
+    if (q.type === 'mc') {
+      const optsEl = document.getElementById('optionsList');
+      optsEl.querySelectorAll('.option').forEach(el => {
+        el.addEventListener('click', () => {
+          if (el.classList.contains('disabled')) return;
+          optsEl.querySelectorAll('.option').forEach(x => x.classList.remove('selected'));
+          el.classList.add('selected');
+          document.getElementById('checkBtn').disabled = false;
+          document.getElementById('checkBtn').dataset.selected = el.dataset.idx;
+        });
+      });
+    } else if (q.type === 'numeric') {
+      const inp = document.getElementById('numAnswer');
+      inp.addEventListener('input', () => {
+        document.getElementById('checkBtn').disabled = inp.value === '';
+      });
+      inp.focus();
+    }
+    document.getElementById('checkBtn').addEventListener('click', () => checkAnswer(q));
+  }
+
+  function checkAnswer(q) {
+    const checkBtn = document.getElementById('checkBtn');
+    const fbEl = document.getElementById('feedback');
+    let isCorrect = false;
+    let givenValue;
+    if (q.type === 'mc') {
+      const sel = parseInt(checkBtn.dataset.selected);
+      givenValue = sel;
+      isCorrect = sel === q.correct;
+      const opts = document.querySelectorAll('.option');
+      opts.forEach((el, i) => {
+        el.classList.add('disabled'); el.classList.remove('selected');
+        if (i === q.correct) el.classList.add('correct');
+        else if (i === sel && !isCorrect) el.classList.add('wrong');
+      });
+    } else {
+      const inp = document.getElementById('numAnswer');
+      const v = parseFloat(inp.value);
+      givenValue = v;
+      isCorrect = !isNaN(v) && Math.abs(v - q.correct) <= (q.tolerance || 0);
+      inp.disabled = true;
+      document.getElementById('inputRow').classList.add(isCorrect ? 'correct' : 'wrong');
+    }
+    answers.push({ qId: q.id, given: givenValue, correct: isCorrect });
+    fbEl.innerHTML = `<div class="feedback ${isCorrect ? 'right' : 'wrong'}"><strong>${isCorrect ? 'Richtig!' : 'Noch nicht.'}</strong> ${q.explain}</div>`;
+    checkBtn.outerHTML = `<button class="btn" id="nextBtn">${currentIdx + 1 === QUESTIONS.length ? 'Auswertung anzeigen' : 'Nächste Aufgabe'}</button>`;
+    document.getElementById('nextBtn').addEventListener('click', () => { currentIdx++; renderQuestion(); });
+  }
+
+  function renderSummary() {
+    progressBar.style.width = '100%';
+    const correctCount = answers.filter(a => a.correct).length;
+    const total = QUESTIONS.length;
+    const pct = Math.round(correctCount / total * 100);
+    let kommentar;
+    if (pct === 100) kommentar = 'Perfekt! Du beherrschst die Logarithmus-Eigenschaften sicher.';
+    else if (pct >= 80) kommentar = 'Sehr gut. Schau dir nur die Aufgaben mit ✗ noch einmal an.';
+    else if (pct >= 60) kommentar = 'Solide. Vor allem die Verschiebungen lohnt sich nochmal anzuschauen (EdM S. 163).';
+    else if (pct >= 40) kommentar = 'Wiederhole die Eigenschaften systematisch und arbeite das Schülermaterial nochmal durch.';
+    else kommentar = 'Lies dir die Erklärungen aufmerksam durch und probiere es nochmal.';
+    let reviewHTML = '<div class="review">';
+    answers.forEach((a, i) => {
+      const q = QUESTIONS[i];
+      reviewHTML += `<div class="review-item ${a.correct ? 'right' : 'wrong'}"><span class="icon">${a.correct ? '✓' : '✗'}</span><span><strong>Aufgabe ${i+1}:</strong> ${q.text.replace(/<[^>]+>/g,'')}</span></div>`;
+    });
+    reviewHTML += '</div>';
+    main.innerHTML = `<div class="summary"><div class="score-circle"><span class="num">${correctCount}/${total}</span><span class="lbl">Richtig</span></div><h2>${pct}&nbsp;%</h2><p>${kommentar}</p>${reviewHTML}<div class="actions"><button class="btn" id="restartBtn">Übung wiederholen</button></div></div>`;
+    document.getElementById('restartBtn').addEventListener('click', () => { currentIdx = 0; answers = []; renderQuestion(); });
+  }
+
+  renderQuestion();
+</script>
+</body>
+</html>
