@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Mathe-Warm-up · Klasse 8–10</title>
+<style>
+  :root{
+    --paper:#f7f6f2; --ink:#1a1d23; --muted:#5b6470; --line:#e2e0d8;
+    --accent:#0e6f6a; --accent-soft:#d7eceb; --accent-ink:#0a504c;
+    --good:#1f7a44; --good-soft:#dcefe2; --bad:#b3431f; --bad-soft:#f6e2da;
+    --card:#ffffff; --shadow:0 1px 2px rgba(26,29,35,.06),0 8px 28px rgba(26,29,35,.07);
+    --r:16px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.45;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:680px;margin:0 auto;padding:20px 18px 80px}
+  header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:4px}
+  h1{font-size:1.35rem;font-weight:740;letter-spacing:-.01em;margin:0}
+  .sub{color:var(--muted);font-size:.82rem;margin:0 0 18px}
+  .modebar{display:flex;gap:6px;background:#edece6;border-radius:999px;padding:4px;margin-bottom:18px}
+  .modebar button{flex:1;border:0;background:transparent;color:var(--muted);font-weight:640;
+    font-size:.9rem;padding:9px 8px;border-radius:999px;cursor:pointer;transition:.15s}
+  .modebar button.active{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+  label.fld{font-size:.78rem;color:var(--muted);font-weight:640}
+  select,input[type=text]{font:inherit;font-size:.92rem;padding:8px 11px;border:1px solid var(--line);
+    border-radius:10px;background:var(--card);color:var(--ink)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+    box-shadow:var(--shadow);padding:20px 20px 18px;margin-bottom:14px}
+  .qmeta{display:flex;gap:8px;align-items:center;font-size:.72rem;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.04em;font-weight:700;margin-bottom:10px}
+  .chip{background:var(--accent-soft);color:var(--accent-ink);padding:2px 9px;border-radius:999px;
+    letter-spacing:.02em}
+  .chip.diff{background:#efece4;color:#6a6256}
+  .qno{margin-left:auto;font-variant-numeric:tabular-nums;color:#9aa1ab}
+  .question{font-size:1.18rem;font-weight:560;margin:2px 0 16px;line-height:1.4}
+  .opts{display:grid;gap:9px}
+  .opt{text-align:left;font:inherit;font-size:1.02rem;padding:13px 15px;border:1.5px solid var(--line);
+    border-radius:12px;background:var(--card);color:var(--ink);cursor:pointer;transition:.12s;min-height:52px}
+  .opt:hover{border-color:#c9c6bc}
+  .opt:disabled{cursor:default}
+  .opt.correct{border-color:var(--good);background:var(--good-soft)}
+  .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+  .opt.dim{opacity:.45}
+  .answerline{display:flex;gap:10px}
+  .answerline input{flex:1;font-size:1.05rem;padding:13px 15px}
+  .btn{font:inherit;font-weight:680;font-size:1rem;border:0;border-radius:12px;padding:13px 20px;
+    cursor:pointer;background:var(--accent);color:#fff;transition:.12s;min-height:50px}
+  .btn:hover{background:var(--accent-ink)}
+  .btn.ghost{background:transparent;color:var(--accent-ink);border:1.5px solid var(--accent)}
+  .btn.ghost:hover{background:var(--accent-soft)}
+  .feedback{margin-top:14px;padding:13px 15px;border-radius:12px;font-size:.95rem;display:none}
+  .feedback.show{display:block}
+  .feedback.ok{background:var(--good-soft);color:#155730}
+  .feedback.no{background:var(--bad-soft);color:#7d2c12}
+  .feedback b{font-weight:740}
+  .hint{display:block;margin-top:6px;font-size:.86rem;opacity:.9}
+  .footrow{display:flex;gap:10px;margin-top:16px;align-items:center}
+  .footrow .spacer{flex:1}
+  .progress{height:6px;border-radius:999px;background:#e8e6dd;overflow:hidden;margin-bottom:16px}
+  .progress>div{height:100%;background:var(--accent);width:0;transition:width .3s}
+  .done{text-align:center;padding:34px 18px}
+  .done .big{font-size:2.6rem;font-weight:780;letter-spacing:-.02em}
+  .done p{color:var(--muted)}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+  .stat .n{font-size:1.5rem;font-weight:760;font-variant-numeric:tabular-nums}
+  .stat .l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+  .boxes{display:flex;gap:6px;margin-top:6px}
+  .boxbar{flex:1;text-align:center;font-size:.7rem;color:var(--muted)}
+  .boxbar .bn{display:block;font-size:1.05rem;font-weight:740;color:var(--ink);font-variant-numeric:tabular-nums}
+  .tiny{font-size:.78rem;color:var(--muted)}
+  .reveal{display:none;margin-top:14px;padding:13px 15px;border-radius:12px;background:var(--accent-soft);color:var(--accent-ink);font-size:1rem}
+  .reveal.show{display:block}
+  .reveal b{font-weight:760}
+  .klass .question{font-size:1.5rem}
+  .klass .qno{font-size:.95rem}
+  a.link{color:var(--accent-ink);text-decoration:none;border-bottom:1px solid var(--accent-soft)}
+  @media(max-width:480px){.wrap{padding:16px 14px 70px}.question{font-size:1.08rem}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ============================================================================
+   INHALTE liegen ausgelagert in  aufgaben.txt  (lesbares Block-Textformat).
+   Diese Datei (die Engine) musst du nicht mehr anfassen.
+   Aufgaben hinzufügen / Themen erweitern  ->  nur aufgaben.txt bearbeiten.
+   Der unten eingebettete Fallback greift nur, falls aufgaben.txt fehlt
+   (z. B. wenn die HTML lokal ohne Server geöffnet wird).
+   ========================================================================== */
+// Parser für aufgaben.txt -> POOL. Wird später in die Engine eingebettet.
+function slug(s){
+  return s.toLowerCase()
+    .replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss")
+    .replace(/[^a-z0-9]+/g,"").slice(0,10);
+}
+function hashId(s){ // djb2 -> base36, stabil je (thema|frage)
+  let h=5381; for(let i=0;i<s.length;i++){ h=((h<<5)+h+s.charCodeAt(i))>>>0; }
+  return h.toString(36);
+}
+function parseDiff(v){
+  v=String(v).trim().toLowerCase();
+  if(v==="1"||v==="leicht")return 1;
+  if(v==="3"||v==="schwer")return 3;
+  return 2;
+}
+function parseAufgaben(text){
+  const errors=[], pool=[];
+  const rawLines=text.replace(/\r\n?/g,"\n").split("\n");
+  // in Blöcke teilen (Leerzeile trennt)
+  const blocks=[]; let cur=[], start=1;
+  rawLines.forEach((ln,i)=>{
+    if(ln.trim()===""){ if(cur.length){blocks.push({lines:cur,start}); cur=[];} }
+    else { if(!cur.length)start=i+1; cur.push(ln); }
+  });
+  if(cur.length)blocks.push({lines:cur,start});
+
+  blocks.forEach(block=>{
+    const lines=block.lines.filter(l=>!l.trim().startsWith("#"));
+    if(!lines.length)return;
+    let thema=null,frage=null,loesung=null,akz=null,hinweis=null,idOverride=null,diff=2,jg=null,bild=null;
+    const opts=[];
+    lines.forEach(raw=>{
+      const s=raw.trim();
+      if(s.startsWith("+ ")||s.startsWith("- ")){
+        const ok=s.startsWith("+ ");
+        const rest=s.slice(2);
+        const parts=rest.split(/\s::\s/);   // nur ' :: ' trennt Diagnose; | und ; im Text bleiben
+        opts.push({t:parts[0].trim(), ok, diag:parts.length>1?parts.slice(1).join(" :: ").trim():undefined});
+        return;
+      }
+      const kv=s.match(/^([A-Za-zÄÖÜäöü]+):\s*(.*)$/);
+      if(kv){
+        const k=kv[1].toUpperCase(), v=kv[2].trim();
+        if(k==="THEMA")thema=v;
+        else if(k==="F"||k==="FRAGE")frage=v;
+        else if(k==="L"||k==="LOESUNG"||k==="LÖSUNG")loesung=v;
+        else if(k==="OK"||k==="AKZEPTIERT")akz=v;
+        else if(k==="HINWEIS"||k==="TIPP")hinweis=v;
+        else if(k==="ID")idOverride=v;
+        else if(k==="JG")jg=parseInt(v)||null;
+        else if(k==="DIFF")diff=parseDiff(v);
+        else if(k==="BILD"||k==="ABB")bild=v;
+        // unbekannte Schlüssel werden ignoriert
+      } else if(frage!==null && !opts.length){
+        frage+=" "+s; // Fortsetzung einer mehrzeiligen Frage
+      }
+    });
+
+    const loc="ab Zeile "+block.start+(thema?` („${thema}“)`:"");
+    if(!thema){ errors.push(loc+": THEMA fehlt."); return; }
+    if(!frage){ errors.push(loc+": F: (Frage) fehlt."); return; }
+    const q={thema,frage,diff,jg};
+    if(hinweis)q.hinweis=hinweis;
+    if(bild)q.bild=bild;
+    if(opts.length){
+      const nok=opts.filter(o=>o.ok).length;
+      if(nok!==1){ errors.push(loc+`: genau EINE richtige Option mit „+“ nötig (gefunden: ${nok}).`); return; }
+      q.typ="mc"; q.optionen=opts;
+    } else {
+      if(!akz && !loesung){ errors.push(loc+": OK: (Auto-Check), L: (Selbstkontrolle) oder +/- Optionen fehlen."); return; }
+      if(akz){
+        q.typ="input"; q.loesung=loesung||akz;
+        q.akzeptiert=akz.split(/\s::\s/).map(x=>x.trim()).filter(Boolean);
+      } else {
+        q.typ="selbst"; q.loesung=loesung;   // nur L: -> keine Auto-Prüfung, Schüler bewertet selbst
+      }
+    }
+    q.id=idOverride || (slug(thema)+"-"+hashId(thema+"|"+frage));
+    pool.push(q);
+  });
+
+  const seen={};
+  pool.forEach(q=>{ if(seen[q.id])errors.push(`Doppelte Aufgabe (ID „${q.id}“) – Frage evtl. doppelt vorhanden.`); seen[q.id]=1; });
+  return {pool,errors};
+}
+
+
+let POOL = [];
+let PARSE_ERRORS = [];
+let POOL_SOURCE = "";
+
+const FALLBACK_AUFGABEN = `# ============================================================
+# AUFGABEN  ·  Mathe-Warm-up
+# ------------------------------------------------------------
+# Eine Aufgabe = ein Block. Bloecke durch LEERZEILE trennen.
+# Zeilen mit # sind Kommentare und werden ignoriert.
+#
+# Pflicht:   THEMA:   und   F: (Frage)
+# Optional:  JG:   DIFF: (leicht / mittel / schwer)   HINWEIS:   ID:
+#
+# FREITEXT  -> OK: akzeptierte Antworten, getrennt durch  ::
+#              (Komma/Punkt & Gross/Klein & Leerzeichen egal)
+#              L: ist die angezeigte Musterloesung.
+#
+# MULTIPLE CHOICE -> Optionszeilen:
+#     +  richtige Option
+#     -  falsche Option  ::  Fehlerdiagnose (nach dem  :: )
+#
+# Trenner ist immer  ::  (mit Leerzeichen). So bleiben  |  und  ;
+# in Koordinaten/Antworten erhalten, z.B.  S(3 | 2)  oder  7;-7 .
+#
+# NEUES THEMA = einfach neuen THEMA-Namen schreiben. Sonst nichts —
+# Mischung, Anzeige und Statistik richten sich automatisch danach.
+# ============================================================
+
+THEMA: Terme
+JG: 8
+DIFF: leicht
+F: Vereinfache: 3a + 5a − 2a
+L: 6a
+OK: 6a
+
+THEMA: Binom. Formeln
+JG: 8
+DIFF: mittel
+F: (x + 4)² =
++ x² + 8x + 16
+- x² + 16 :: Der gemischte Term 2·x·4 = 8x fehlt – das ist der häufigste Fehler bei (a+b)².
+- x² + 4x + 16 :: Der mittlere Term ist 2·x·4 = 8x, nicht 4x.
+- 2x + 8 :: Quadrieren ≠ mit 2 multiplizieren. (a+b)² = a² + 2ab + b².
+HINWEIS: 1. Binomische Formel: (a+b)² = a² + 2ab + b².
+
+THEMA: Binom. Formeln
+JG: 8
+DIFF: mittel
+F: (x − 5)² =
++ x² − 10x + 25
+- x² − 25 :: Mittelterm −10x fehlt. Das ist nicht die 3. Formel (a−b)(a+b).
+- x² + 10x + 25 :: Bei (a−b)² ist der Mittelterm negativ: −2ab.
+- x² − 5x + 25 :: Mittelterm ist 2·x·5 = 10x.
+HINWEIS: 2. Binomische Formel: (a−b)² = a² − 2ab + b².
+
+THEMA: Lin. Gleichungen
+JG: 8
+DIFF: leicht
+F: Löse:  2x + 7 = 19
+L: x = 6
+OK: 6 :: x=6
+
+THEMA: Lin. Gleichungen
+JG: 8
+DIFF: mittel
+F: Löse:  4x − 3 = x + 9
+L: x = 4
+OK: 4 :: x=4
+
+THEMA: Lin. Gleichungen
+JG: 9
+DIFF: mittel
+F: Löse:  3(x − 2) = 2x + 1
++ x = 7
+- x = 5 :: Klammer falsch aufgelöst: 3·x − 3·2 = 3x − 6, nicht 3x − 2.
+- x = −5 :: Vorzeichenfehler beim Umstellen. Prüfe das Sortieren von x und Zahlen.
+- x = 1 :: Rechne nochmal: 3x − 6 = 2x + 1 → x = 7.
+HINWEIS: Erst Klammer auflösen, dann x auf eine Seite.
+
+THEMA: Lin. Funktionen
+JG: 8
+DIFF: mittel
+F: Welche Steigung hat die Gerade durch P(1|2) und Q(4|11)?
+L: m = 3   (Δy/Δx = 9/3)
+OK: 3 :: m=3
+
+THEMA: Lin. Funktionen
+JG: 8
+DIFF: mittel
+F: y = −2x + 5.  Wo schneidet die Gerade die y-Achse?
++ bei y = 5
+- bei y = −2 :: −2 ist die Steigung m, nicht der y-Achsenabschnitt b.
+- bei x = 5 :: Der y-Achsenabschnitt liegt bei x = 0, der y-Wert ist dort 5.
+- bei y = 2,5 :: Das wäre die Nullstelle (x-Achse), nicht der y-Schnitt.
+HINWEIS: In y = mx + b ist b der y-Achsenabschnitt.
+
+THEMA: Lin. Funktionen
+JG: 9
+DIFF: schwer
+F: Bestimme die Nullstelle von  y = 2x − 6.
+L: x = 3  (2x − 6 = 0)
+OK: 3 :: x=3
+
+THEMA: Prozentrechnung
+JG: 8
+DIFF: leicht
+F: Wie viel sind 25 % von 80 €?
+L: 20 €
+OK: 20 :: 20€ :: 20 €
+
+THEMA: Prozentrechnung
+JG: 9
+DIFF: mittel
+F: Ein Pulli kostet nach 20 % Rabatt 48 €. Wie war der Originalpreis?
++ 60 €
+- 57,60 € :: Klassischer Fehler: 20 % auf 48 € draufrechnen. 48 € sind aber nur 80 % – mit ·1,2 kommst du nicht zurück.
+- 68 € :: Hier wurde 20 € addiert statt mit dem Prozentwert gerechnet.
+- 96 € :: Das wäre der doppelte Preis – nicht 80 % = 48 €.
+HINWEIS: 48 € entsprechen 80 %. Grundwert = 48 / 0,8 = 60 €.
+
+THEMA: Zinsrechnung
+JG: 9
+DIFF: mittel
+F: 1500 € werden mit 2 % pro Jahr verzinst. Zinsen nach 1 Jahr?
+L: 30 €  (1500 · 0,02)
+OK: 30 :: 30€ :: 30 €
+
+THEMA: Pythagoras
+JG: 9
+DIFF: leicht
+F: Rechtw. Dreieck, Katheten 3 und 4. Wie lang ist die Hypotenuse?
+L: c = 5  (√(9+16))
+OK: 5 :: 5cm :: c=5
+
+THEMA: Pythagoras
+JG: 9
+DIFF: mittel
+F: Hypotenuse c = 13, Kathete a = 5. Wie lang ist b?
++ 12
+- √194 ≈ 13,9 :: Hier wurde addiert (13²+5²). Bei gesuchter Kathete musst du subtrahieren: c² − a².
+- 8 :: 13 − 5 = 8 ist die Differenz, nicht √(c²−a²). Erst quadrieren!
+- 18 :: 13 + 5 = 18 – Seitenlängen darf man nicht einfach addieren.
+HINWEIS: Gesuchte Kathete: b = √(c² − a²) = √(169 − 25) = √144 = 12.
+
+THEMA: Quadr. Funktionen
+JG: 9
+DIFF: mittel
+F: Scheitelpunkt von  y = (x − 3)² + 2 ?
++ S(3 | 2)
+- S(−3 | 2) :: Vorzeichenfalle: (x − 3)² hat den Scheitel bei x = +3, nicht −3.
+- S(3 | −2) :: Die +2 verschiebt nach oben → y = +2.
+- S(2 | 3) :: x- und y-Koordinate vertauscht.
+HINWEIS: Scheitelform y = (x − d)² + e → S(d | e).
+
+THEMA: Quadr. Gleichungen
+JG: 10
+DIFF: mittel
+F: Löse:  x² = 49
+L: x = 7  oder  x = −7
+OK: x=7;x=-7 :: x=±7 :: ±7 :: 7,-7 :: 7;-7 :: -7;7
+
+THEMA: Quadr. Gleichungen
+JG: 10
+DIFF: schwer
+F: Lösungen von  x² − 5x + 6 = 0 ?
++ x = 2  und  x = 3
+- x = −2  und  x = −3 :: Vorzeichen: gesucht sind zwei Zahlen mit Produkt +6 und Summe +5 → +2, +3.
+- x = 1  und  x = 6 :: Produkt stimmt (6), aber die Summe muss 5 sein, nicht 7.
+- x = 5  und  x = 6 :: Das sind einfach die Zahlen aus der Gleichung – kein Lösungsverfahren.
+HINWEIS: Satz von Vieta: x₁·x₂ = 6, x₁+x₂ = 5.
+
+THEMA: Potenzen
+JG: 9
+DIFF: mittel
+F: Vereinfache:  x³ · x⁴
++ x⁷
+- x¹² :: Bei gleicher Basis werden Exponenten addiert (3+4), nicht multipliziert.
+- x¹ :: Subtrahiert? Beim Multiplizieren werden Exponenten addiert.
+- 2x⁷ :: Es kommt kein Faktor 2 hinzu – die Basen werden nicht addiert.
+HINWEIS: Potenzgesetz: aᵐ · aⁿ = aᵐ⁺ⁿ.
+
+THEMA: Wurzeln
+JG: 9
+DIFF: leicht
+F: Berechne:  √81
+L: 9
+OK: 9
+
+THEMA: Strahlensatz
+JG: 9
+DIFF: schwer
+F: Strahlensatz: a/b = 4/6, und a' = 6. Wie groß ist b'?
++ 9
+- 8 :: Nicht +2 wie bei a→a'. Verhältnisse sind multiplikativ: ·1,5.
+- 4 :: Zähler und Nenner verwechselt – b' ist größer als a'.
+- 6 :: a' und b' sind nicht gleich; das Verhältnis 4:6 bleibt erhalten.
+HINWEIS: 4/6 = 6/b' → b' = 6·6/4 = 9.
+
+THEMA: Wahrscheinlichkeit
+JG: 8
+DIFF: leicht
+F: Wahrscheinlichkeit, mit einem Würfel eine gerade Zahl zu werfen? (als Bruch)
+L: 3/6 = 1/2
+OK: 1/2 :: 3/6 :: 0,5 :: 50%
+
+THEMA: Wahrscheinlichkeit
+JG: 10
+DIFF: mittel
+F: Zwei Münzwürfe. P(zweimal Kopf)?
++ 1/4
+- 1/2 :: Das ist nur ein Wurf. Bei zwei unabhängigen Würfen multiplizierst du: ½·½.
+- 2/4 :: Hier wurden Wahrscheinlichkeiten addiert statt multipliziert.
+- 1/3 :: Es gibt 4 gleich wahrscheinliche Ergebnisse (KK, KZ, ZK, ZZ), nicht 3.
+HINWEIS: Unabhängige Ereignisse: P(A und B) = P(A)·P(B) = ½·½ = ¼.
+`;
+
+async function loadPool(){
+  let text = FALLBACK_AUFGABEN, source = "eingebettet";
+  try{
+    const res = await fetch(SET.datei, {cache:"no-store"});
+    if(res.ok){ const t = await res.text(); if(t.trim().length){ text=t; source="aufgaben.txt"; } }
+  }catch(e){ /* file:// oder offline -> Fallback */ }
+  const parsed = parseAufgaben(text);
+  POOL = parsed.pool;
+  PARSE_ERRORS = parsed.errors;
+  POOL_SOURCE = source;
+}
+
+/* ============================ Konfiguration ============================== */
+const SET_SIZE = 5;                       // Aufgaben pro Tagesset
+const INTERVALS = [0, 1, 3, 7, 16];       // Leitner-Boxen 1–5: Tage bis Wiedervorlage
+
+/* Mehrere Aufgabensätze in EINER Engine. Aufruf:
+     mathe-warmup.html                 -> Standard (Klasse 8–10)
+     mathe-warmup.html?set=wettbewerb  -> Mathe-Wettbewerb (eigene Datei + eigener Lernstand)
+   Neuen Satz = einfach hier einen Eintrag ergänzen. */
+const SETS = {
+  standard:   { titel:"Mathe-Warm-up",   sub:"Klasse 8–10",        datei:"aufgaben.txt",            store:"mathe_warmup_v1" },
+  wettbewerb: { titel:"Mathe-Wettbewerb", sub:"1. Runde · Training", datei:"aufgaben-wettbewerb.txt", store:"mathe_wettbewerb_v1" }
+};
+const SET = SETS[new URLSearchParams(location.search).get("set")] || SETS.standard;
+const STORE_KEY = SET.store;              // localStorage-Schlüssel (pro Satz getrennt)
+
+/* ============================ Hilfsfunktionen ============================ */
+const app = document.getElementById("app");
+const todayStr = () => new Date().toISOString().slice(0,10);
+const daysBetween = (a,b) => Math.round((new Date(b) - new Date(a)) / 86400000);
+function norm(s){ return String(s).toLowerCase().replace(/\s+/g,"").replace(/,/g,"."); }
+
+function profileKey(){ return STORE_KEY + ":" + (localStorage.getItem(STORE_KEY+":profil")||"standard"); }
+function loadState(){ try{ return JSON.parse(localStorage.getItem(profileKey())) || {}; }catch(e){ return {}; } }
+function saveState(s){ localStorage.setItem(profileKey(), JSON.stringify(s)); }
+/* Lernstand nur für Aufgaben, die aktuell in aufgaben.txt existieren.
+   Waisen (gelöschte Aufgaben) bleiben gespeichert, zählen aber nicht in der Statistik. */
+function poolState(){
+  const st=loadState(), ids=new Set(POOL.map(q=>q.id)), out={};
+  for(const k in st){ if(ids.has(k)) out[k]=st[k]; }
+  return out;
+}
+
+/* Deterministischer Tages-Seed (für Klassenmodus: alle sehen dasselbe) */
+function seededShuffle(arr, seed){
+  let s = seed, a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ s=(s*9301+49297)%233280; const j=Math.floor(s/233280*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function dateSeed(){ const d=todayStr().replace(/-/g,""); return parseInt(d,10)%100000; }
+
+/* Interleaving: aus Kandidaten ein themengemischtes Set ziehen */
+function interleave(cands, n){
+  const byTheme = {};
+  cands.forEach(q => (byTheme[q.thema] ||= []).push(q));
+  const order = Object.keys(byTheme);
+  const out = [];
+  let i = 0;
+  while(out.length < n && order.some(t=>byTheme[t].length)){
+    const t = order[i % order.length];
+    if(byTheme[t].length) out.push(byTheme[t].shift());
+    i++;
+  }
+  return out;
+}
+
+/* ============================ Set-Erzeugung ============================== */
+function buildSetUebung(){
+  const st = loadState();
+  const today = todayStr();
+  const due = [], fresh = [];
+  POOL.forEach(q => {
+    const e = st[q.id];
+    if(!e){ fresh.push(q); }
+    else if(daysBetween(e.lastSeen, today) >= INTERVALS[e.box-1]){ due.push({q, box:e.box}); }
+  });
+  // fällige zuerst nach niedriger Box (= schwächer sitzend) sortieren
+  due.sort((a,b)=>a.box-b.box);
+  let candidates = due.map(d=>d.q).concat(fresh);
+  if(candidates.length === 0) return [];           // alles im grünen Bereich
+  return interleave(candidates, SET_SIZE);
+}
+function buildSetKlasse(){
+  return seededShuffle(POOL, dateSeed()).slice(0, SET_SIZE);
+}
+
+/* ============================ Leitner-Update ============================= */
+function recordOutcome(qid, outcome){   // "good" | "partial" | "bad"
+  const st = loadState();
+  const e = st[qid] || {box:1, correct:0, wrong:0};
+  if(outcome==="good"){ e.box = Math.min(5, e.box+1); e.correct++; }
+  else if(outcome==="bad"){ e.box = 1; e.wrong++; }
+  else { /* partial: Box bleibt, nur Wiedervorlage zurücksetzen */ }
+  e.lastSeen = todayStr();
+  st[qid] = e;
+  saveState(st);
+}
+function recordResult(qid, correct){ recordOutcome(qid, correct ? "good" : "bad"); }
+
+/* ============================ Rendering ================================== */
+let mode = "uebung";   // "uebung" | "klasse"
+let queue = [];
+let pos = 0;
+let answered = false;
+
+function render(){
+  app.innerHTML = "";
+  app.className = mode==="klasse" ? "klass" : "";
+  app.appendChild(headerEl());
+  app.appendChild(modebar());
+  maybeBanner();
+
+  if(mode==="uebung"){
+    app.appendChild(profileRow());
+    if(queue.length===0){ queue = buildSetUebung(); pos=0; }
+    if(queue.length===0){ app.appendChild(allDoneEl()); return; }
+    app.appendChild(progressEl());
+    app.appendChild(questionCard(queue[pos]));
+  } else {
+    if(queue.length===0){ queue = buildSetKlasse(); pos=0; }
+    app.appendChild(klassHint());
+    app.appendChild(progressEl());
+    app.appendChild(klassCard(queue[pos]));
+  }
+}
+
+function headerEl(){
+  const h = document.createElement("header");
+  h.innerHTML = `<h1>${SET.titel}</h1><span class="tiny">${SET.sub}</span>`;
+  const w = document.createElement("div");
+  w.appendChild(h);
+  const p = document.createElement("p");
+  p.className="sub";
+  p.textContent = "Tägliche Abrufübung · gemischte Themen · verteiltes Wiederholen";
+  w.appendChild(p);
+  return w;
+}
+
+function modebar(){
+  const bar = document.createElement("div");
+  bar.className="modebar";
+  [["uebung","Übungsmodus"],["klasse","Klassenmodus"]].forEach(([m,label])=>{
+    const b=document.createElement("button");
+    b.textContent=label; if(m===mode)b.classList.add("active");
+    b.onclick=()=>{ mode=m; queue=[]; pos=0; answered=false; render(); };
+    bar.appendChild(b);
+  });
+  return bar;
+}
+
+function profileRow(){
+  const row=document.createElement("div"); row.className="row";
+  const lab=document.createElement("label"); lab.className="fld"; lab.textContent="Profil";
+  const inp=document.createElement("input"); inp.type="text"; inp.style.width="140px";
+  inp.value = localStorage.getItem(STORE_KEY+":profil")||"standard";
+  inp.onchange=()=>{ localStorage.setItem(STORE_KEY+":profil", inp.value.trim()||"standard"); queue=[]; pos=0; render(); };
+  const stat=document.createElement("span"); stat.className="tiny";
+  const st=poolState(); const seen=Object.keys(st).length; const inbox5=Object.values(st).filter(e=>e.box===5).length;
+  stat.style.marginLeft="auto";
+  stat.innerHTML = `${seen}/${POOL.length} Aufgaben begonnen · <a class="link" href="#" id="statlink">Fortschritt</a>`;
+  row.append(lab,inp,stat);
+  setTimeout(()=>{ const l=document.getElementById("statlink"); if(l) l.onclick=(e)=>{e.preventDefault();showStats();}; },0);
+  return row;
+}
+
+function progressEl(){
+  const wrap=document.createElement("div"); wrap.className="progress";
+  const bar=document.createElement("div"); bar.style.width=(pos/queue.length*100)+"%";
+  wrap.appendChild(bar); return wrap;
+}
+
+function questionCard(q){
+  const c=document.createElement("div"); c.className="card";
+  c.appendChild(metaEl(q));
+  const qe=document.createElement("div"); qe.className="question"; qe.textContent=q.frage; c.appendChild(qe);
+  if(q.bild){ const fig=document.createElement("img"); fig.src=q.bild; fig.alt="Abbildung zur Aufgabe"; fig.loading="lazy"; fig.style.cssText="display:block;max-width:100%;height:auto;margin:10px 0;border:1px solid var(--line,#ddd);border-radius:8px;background:#fff"; c.appendChild(fig); }
+  const fb=document.createElement("div"); fb.className="feedback";
+
+  if(q.typ==="mc"){
+    const opts=document.createElement("div"); opts.className="opts";
+    const order=seededShuffle(q.optionen, (q.id.charCodeAt(0)+q.id.length)*7 + (mode==="uebung"?Date.now()%97:dateSeed()));
+    order.forEach(o=>{
+      const b=document.createElement("button"); b.className="opt"; b.textContent=o.t;
+      b.onclick=()=>{
+        if(answered)return; answered=true;
+        opts.querySelectorAll(".opt").forEach(x=>{ x.disabled=true;
+          if(x.textContent === (q.optionen.find(z=>z.ok).t)) x.classList.add("correct");
+          else x.classList.add("dim");
+        });
+        if(o.ok){ fb.className="feedback show ok"; fb.innerHTML=`<b>Richtig.</b>`+(q.hinweis?`<span class="hint">${q.hinweis}</span>`:""); }
+        else{ b.classList.remove("dim"); b.classList.add("wrong");
+          fb.className="feedback show no";
+          fb.innerHTML=`<b>Noch nicht.</b> ${o.diag||""}`+(q.hinweis?`<span class="hint">${q.hinweis}</span>`:""); }
+        if(mode==="uebung") recordResult(q.id,o.ok);
+        showNext(c);
+      };
+      opts.appendChild(b);
+    });
+    c.appendChild(opts);
+  } else if(q.typ==="selbst"){
+    const reveal=document.createElement("button"); reveal.className="btn ghost"; reveal.textContent="Lösung zeigen";
+    const sol=document.createElement("div"); sol.className="reveal";
+    const rate=document.createElement("div"); rate.className="footrow"; rate.style.flexWrap="wrap"; rate.style.display="none";
+    reveal.onclick=()=>{
+      sol.classList.add("show"); sol.innerHTML=`<b>Lösung:</b> ${q.loesung}`+(q.hinweis?`<span class="hint">${q.hinweis}</span>`:"");
+      reveal.style.display="none"; rate.style.display="flex";
+    };
+    const ask=document.createElement("div"); ask.className="tiny"; ask.style.cssText="width:100%;margin-bottom:2px;color:var(--muted)";
+    ask.textContent="Wie ist es dir gegangen?";
+    const mk=(label,outcome,cls)=>{ const b=document.createElement("button"); b.className="btn "+cls; b.style.flex="1"; b.textContent=label;
+      b.onclick=()=>{ if(answered)return; answered=true; if(mode==="uebung")recordOutcome(q.id,outcome); showNext(c); }; return b; };
+    rate.append(ask, mk("Konnte ich","good",""), mk("Teilweise","partial","ghost"), mk("Noch nicht","bad","ghost"));
+    c.append(reveal, sol, rate);
+  } else {
+    const line=document.createElement("div"); line.className="answerline";
+    const inp=document.createElement("input"); inp.type="text"; inp.placeholder="Antwort…"; inp.autocomplete="off";
+    inp.setAttribute("inputmode","text"); inp.setAttribute("autocapitalize","off");
+    const btn=document.createElement("button"); btn.className="btn"; btn.textContent="Prüfen";
+    const check=()=>{
+      if(answered)return; const val=inp.value.trim(); if(!val)return; answered=true;
+      const ok=q.akzeptiert.some(a=>norm(a)===norm(val)); inp.disabled=true; btn.disabled=true;
+      if(ok){ fb.className="feedback show ok"; fb.innerHTML=`<b>Richtig.</b> ${q.loesung?`<span class="hint">${q.loesung}</span>`:""}`; }
+      else{ fb.className="feedback show no"; fb.innerHTML=`<b>Noch nicht.</b> Lösung: <b>${q.loesung}</b>`+(q.hinweis?`<span class="hint">${q.hinweis}</span>`:""); }
+      if(mode==="uebung") recordResult(q.id,ok);
+      showNext(c);
+    };
+    btn.onclick=check; inp.onkeydown=(e)=>{ if(e.key==="Enter")check(); };
+    line.append(inp,btn); c.appendChild(line);
+    setTimeout(()=>inp.focus(),50);
+  }
+  c.appendChild(fb);
+  return c;
+}
+
+function klassCard(q){
+  const c=document.createElement("div"); c.className="card";
+  c.appendChild(metaEl(q));
+  const qe=document.createElement("div"); qe.className="question"; qe.textContent=q.frage; c.appendChild(qe);
+  if(q.bild){ const fig=document.createElement("img"); fig.src=q.bild; fig.alt="Abbildung zur Aufgabe"; fig.loading="lazy"; fig.style.cssText="display:block;max-width:100%;height:auto;margin:10px 0;border:1px solid var(--line,#ddd);border-radius:8px;background:#fff"; c.appendChild(fig); }
+  const rev=document.createElement("div"); rev.className="reveal";
+  rev.innerHTML = q.typ==="mc"
+     ? `<b>Lösung:</b> ${q.optionen.find(o=>o.ok).t}` + (q.hinweis?`<span class="hint">${q.hinweis}</span>`:"")
+     : `<b>Lösung:</b> ${q.loesung}` + (q.hinweis?`<span class="hint">${q.hinweis}</span>`:"");
+  const foot=document.createElement("div"); foot.className="footrow";
+  const reveal=document.createElement("button"); reveal.className="btn ghost"; reveal.textContent="Lösung zeigen";
+  reveal.onclick=()=>{ rev.classList.add("show"); reveal.style.display="none"; };
+  const sp=document.createElement("div"); sp.className="spacer";
+  const next=document.createElement("button"); next.className="btn"; next.textContent = pos+1<queue.length?"Weiter":"Fertig";
+  next.onclick=()=>advance();
+  foot.append(reveal,sp,next);
+  c.append(rev,foot);
+  return c;
+}
+
+function metaEl(q){
+  const m=document.createElement("div"); m.className="qmeta";
+  const t=document.createElement("span"); t.className="chip"; t.textContent=q.thema;
+  const d=document.createElement("span"); d.className="chip diff"; d.textContent=["leicht","mittel","schwer"][q.diff-1];
+  const n=document.createElement("span"); n.className="qno"; n.textContent=`${pos+1} / ${queue.length}`;
+  m.append(t,d,n); return m;
+}
+
+function showNext(card){
+  const foot=document.createElement("div"); foot.className="footrow";
+  const sp=document.createElement("div"); sp.className="spacer";
+  const next=document.createElement("button"); next.className="btn";
+  next.textContent = pos+1<queue.length ? "Weiter" : "Fertig";
+  next.onclick=()=>advance();
+  foot.append(sp,next); card.appendChild(foot);
+  setTimeout(()=>next.focus(),0);
+}
+
+function advance(){
+  answered=false;
+  if(pos+1<queue.length){ pos++; render(); }
+  else{ queue=[]; pos=0; if(mode==="uebung") showSessionDone(); else { mode="klasse"; render(); } }
+}
+
+function klassHint(){
+  const p=document.createElement("p"); p.className="tiny";
+  p.style.margin="0 0 12px";
+  p.textContent="Tagesset – für alle gleich. Schüler rechnen, dann gemeinsam aufdecken.";
+  return p;
+}
+
+function allDoneEl(){
+  const c=document.createElement("div"); c.className="card done";
+  c.innerHTML=`<div class="big">✓</div><p>Heute alles wiederholt, was fällig war.<br>Komm morgen wieder – dann sind die nächsten Aufgaben dran.</p>`;
+  const b=document.createElement("button"); b.className="btn ghost"; b.textContent="Fortschritt ansehen";
+  b.onclick=showStats; c.appendChild(b); return c;
+}
+
+function showSessionDone(){
+  app.innerHTML="";
+  app.appendChild(headerEl()); app.appendChild(modebar());
+  const c=document.createElement("div"); c.className="card done";
+  c.innerHTML=`<div class="big">Stark!</div><p>Tagesset geschafft.</p>`;
+  const row=document.createElement("div"); row.className="footrow";
+  const again=document.createElement("button"); again.className="btn ghost"; again.textContent="Mehr üben";
+  again.onclick=()=>{ queue=buildSetUebung(); pos=0; render(); };
+  const stat=document.createElement("button"); stat.className="btn"; stat.textContent="Fortschritt";
+  stat.onclick=showStats;
+  const sp=document.createElement("div"); sp.className="spacer";
+  row.append(again,sp,stat); c.appendChild(row); app.appendChild(c);
+}
+
+function showStats(){
+  const st=poolState();
+  const boxes=[0,0,0,0,0]; let corr=0,wro=0;
+  Object.values(st).forEach(e=>{ boxes[e.box-1]++; corr+=e.correct||0; wro+=e.wrong||0; });
+  const seen=Object.keys(st).length;
+  const quote = corr+wro>0 ? Math.round(corr/(corr+wro)*100) : 0;
+  app.innerHTML="";
+  app.appendChild(headerEl()); app.appendChild(modebar());
+  const c=document.createElement("div"); c.className="card";
+  c.innerHTML=`<div class="qmeta"><span class="chip">Fortschritt</span></div>`;
+  const stats=document.createElement("div"); stats.className="stats";
+  stats.innerHTML=`
+    <div class="stat"><div class="n">${seen}</div><div class="l">begonnen</div></div>
+    <div class="stat"><div class="n">${boxes[4]}</div><div class="l">sitzt (Box 5)</div></div>
+    <div class="stat"><div class="n">${quote}%</div><div class="l">Trefferquote</div></div>`;
+  c.appendChild(stats);
+  const bx=document.createElement("div"); bx.className="boxes";
+  boxes.forEach((v,i)=>{ const e=document.createElement("div"); e.className="boxbar";
+    e.innerHTML=`<span class="bn">${v}</span>Box ${i+1}`; bx.appendChild(e); });
+  c.appendChild(bx);
+  const note=document.createElement("p"); note.className="tiny"; note.style.marginTop="12px";
+  note.textContent="Box 1 = kommt morgen wieder · Box 5 = sitzt, kommt erst in ~16 Tagen erneut.";
+  c.appendChild(note);
+  const row=document.createElement("div"); row.className="footrow";
+  const back=document.createElement("button"); back.className="btn"; back.textContent="Weiter üben";
+  back.onclick=()=>{ queue=[]; pos=0; render(); };
+  const sp=document.createElement("div"); sp.className="spacer";
+  const reset=document.createElement("button"); reset.className="btn ghost"; reset.textContent="Profil zurücksetzen";
+  reset.onclick=()=>{ if(confirm("Lernstand dieses Profils löschen?")){ localStorage.removeItem(profileKey()); queue=[]; pos=0; render(); } };
+  row.append(back,sp,reset); c.appendChild(row);
+  app.appendChild(c);
+}
+
+function maybeBanner(){
+  if(POOL_SOURCE==="eingebettet"){
+    const b=document.createElement("div"); b.className="card";
+    b.style.cssText="border-color:#e7d6a8;background:#fbf6e6;padding:12px 14px";
+    b.innerHTML='<div class="tiny" style="color:#7a5c12"><b>Hinweis:</b> <code>aufgaben.txt</code> nicht gefunden – es laufen die eingebetteten Beispielaufgaben. Auf GitHub Pages liegt die Datei neben dieser HTML, dann werden deine Aufgaben geladen.</div>';
+    app.appendChild(b);
+  }
+  if(PARSE_ERRORS.length){
+    const b=document.createElement("div"); b.className="card";
+    b.style.cssText="border-color:#e3b7a3;background:var(--bad-soft);padding:12px 14px";
+    let html='<div class="tiny" style="color:#7d2c12"><b>'+PARSE_ERRORS.length+' Aufgabe(n) übersprungen – bitte in aufgaben.txt prüfen:</b><ul style="margin:6px 0 0 16px;padding:0">';
+    PARSE_ERRORS.slice(0,8).forEach(e=>{ html+='<li>'+e.replace(/</g,"&lt;")+'</li>'; });
+    if(PARSE_ERRORS.length>8) html+='<li>… und '+(PARSE_ERRORS.length-8)+' weitere</li>';
+    html+='</ul></div>'; b.innerHTML=html; app.appendChild(b);
+  }
+}
+
+loadPool().then(render);
+</script>
+</body>
+</html>

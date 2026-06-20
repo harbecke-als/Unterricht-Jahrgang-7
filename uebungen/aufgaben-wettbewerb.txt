@@ -1,0 +1,297 @@
+# ============================================================
+# AUFGABEN  ·  Mathe-Wettbewerb (1. Runde, Training)
+# Geladen von  mathe-warmup.html?set=wettbewerb
+# ------------------------------------------------------------
+# Gleiches Blockformat wie aufgaben.txt. Besonderheit hier:
+#
+#   SELBSTKONTROLLE  ->  nur  L:  (Lösung), KEIN OK:
+#       Aufgabe lesen -> "Lösung zeigen" -> selbst bewerten
+#       (Konnte ich / Teilweise / Noch nicht). Ideal für
+#       mehrschrittige Wettbewerbs-, Konstruktions- und
+#       Begründungsaufgaben, die man nicht als Zahl eintippt.
+#
+#   AUTO-CHECK  ->  zusätzlich  OK:  mit Endergebnis-Schreibweisen
+#       (nur sinnvoll, wenn es EIN klares Endergebnis gibt).
+#
+# Herkunft jeder importierten Aufgabe als #-Kommentar darüber, z.B.:
+#   # Quelle: Math.-Wettbewerb Hessen · 1. Runde 2018 · Gruppe A · Pflicht · **
+#
+# DIFF aus der Sternmarkierung der Seite:  * = leicht, ** = mittel, *** = schwer.
+# THEMA = exakter Themenname der Lerntheke (siehe Workflow).
+#
+# Inhalte werden über WORKFLOW_wettbewerb-import.md aus
+# https://mathematik-wettbewerb.de/aufgabenauswahl  befüllt –
+# ausschließlich Aufgaben von dieser Seite.
+# ============================================================
+
+# >>> PLATZHALTER – eigene Beispielaufgaben, NICHT vom Wettbewerb.
+# >>> Entfernen, sobald echte Aufgaben über den Workflow ergänzt sind.
+
+THEMA: Teilbarkeit
+DIFF: mittel
+F: Begründe, warum die Summe dreier aufeinanderfolgender natürlicher Zahlen immer durch 3 teilbar ist.
+L: n + (n+1) + (n+2) = 3n + 3 = 3·(n+1). Das ist ein Vielfaches von 3, also durch 3 teilbar.
+
+THEMA: Geometrie
+DIFF: mittel
+F: Ein Rechteck ist 12 cm lang und 5 cm breit. Begründe und berechne die Länge der Diagonale.
+L: Diagonale teilt das Rechteck in zwei rechtwinklige Dreiecke. Pythagoras: d = √(12² + 5²) = √169 = 13 cm.
+
+THEMA: Prozentrechnung
+DIFF: leicht
+F: Ein Pullover kostet 80 €. Im Schlussverkauf wird er um 35 % reduziert. Wie hoch ist der neue Preis?
+L: 52 €   (80 € · 0,65)
+OK: 52 :: 52€ :: 52 €
+
+# ============================================================
+# Import: Math.-Wettbewerb Hessen · 1. Runde · Gruppe A · Pflicht
+# Thema Prozentrechnung · Jahrgänge 2020–2024 · abgerufen 20.06.2026
+# Quelle: https://mathematik-wettbewerb.de/aufgabenauswahl
+# ============================================================
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2020 · Gruppe A · Pflicht · **
+THEMA: Prozentrechnung
+DIFF: mittel
+F: Lena sagt: „Meine Bestweite beim Weitsprung im letzten Jahr war 4,50 m. In diesem Jahr bin ich erst 80 % dieser Weite gesprungen." Mona sagt: „Ich habe dieses Jahr schon 4,95 m erreicht, das sind 10 % mehr als im letzten Jahr." a) Berechne, wie weit Lena in diesem Jahr gesprungen ist. b) Berechne, wie weit Mona im vergangenen Jahr gesprungen ist.
+L: a) 3,60 m. b) 4,50 m (4,95 m entsprechen 110 %).
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2020 · Gruppe A · Pflicht · **
+THEMA: Prozentrechnung
+DIFF: mittel
+F: a) In der Klasse 8a haben 8 der 25 Schüler die Note 2 erreicht. Wie viel Prozent der Schüler dieser Klasse haben eine andere Note? b) In der Klasse 8b haben 8 Schüler in Mathe die Note 2 geschrieben. Dies sind 2/7 aller Schüler dieser Klasse. Wie viele Schüler hat die 8b?
+L: a) 68 %. b) 28 Schüler (Ansatz: 1/7 entspricht 4 Schülern).
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2021 · Gruppe A · Pflicht · ***
+THEMA: Prozentrechnung
+DIFF: schwer
+F: Pascal und Sarah haben zusammen 150 Plätzchen gebacken. 90 davon hat Pascal gebacken. a) Wie viel Prozent aller Plätzchen hat Sarah gebacken? b) Wie viel Prozent hat Pascal mehr gebacken als Sarah?
+L: a) 40 %. b) 50 % (100 % sind 60 Plätzchen).
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2022 · Gruppe A · Pflicht · **
+THEMA: Prozentrechnung
+DIFF: mittel
+F: Der Preis für eine Packung Vogelfutter soll um 10 % erhöht werden. Bisher kostete die Packung 10,89 €. Bestimme den neuen Preis. Runde auf ganze Cent.
+L: 11,98 € (10 % von 10,89 € sind 1,089 €; 10,89 € + 1,089 € = 11,979 € bzw. 10,89 € · 1,1 = 11,979 €).
+OK: 11,98 :: 11,98€ :: 11,98 € :: 11,98 Euro
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2022 · Gruppe A · Pflicht · **
+THEMA: Prozentrechnung
+DIFF: mittel
+F: Ein Spiel kostet 35 €. Gegenüber dem Vorjahr ist es um 7 € teurer geworden. a) Gib an, um wie viel Prozent der Preis für das Spiel gestiegen ist. b) Lina hat heute einen Gutschein, mit dem sie 15 % Rabatt erhält. Ermittle den Preis, den Lina für das Spiel zahlen muss.
+L: a) 25 % (35 € − 7 € = 28 €; 7 € von 28 € sind 25 %). b) 29,75 € (15 % von 35 € sind 5,25 €).
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2023 · Gruppe A · Pflicht · **
+THEMA: Prozentrechnung
+DIFF: mittel
+F: Der Preis für ein Stand Up Paddle Board (SUP) steigt jedes Jahr um 10 %. In diesem Jahr kostet es 154 €. a) Wie teuer wird das SUP im nächsten Jahr sein? b) Wie teuer war das SUP im vergangenen Jahr?
+L: a) 169,40 € (10 % von 154 € sind 15,40 €). b) 140 € (154 € entsprechen 110 %; 14 € entsprechen 10 %).
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2024 · Gruppe A · Pflicht · **
+THEMA: Prozentrechnung
+DIFF: mittel
+F: a) Ein Pullover kostete ursprünglich 60 €. Der Preis wurde auf 48 € gesenkt. Berechne, um wie viel Prozent der Preis reduziert worden ist. b) Der Preis eines T-Shirts wurde um 20 % erhöht und beträgt nun 60 €. Berechne den alten Preis.
+L: a) 20 % (60 € − 48 € = 12 €; 12 € : 60 €). b) 50 € (z. B. 60 € : 1,2).
+
+# ============================================================
+# Import: Math.-Wettbewerb Hessen · 1. Runde · Gruppe A · Pflicht
+# Themen Zuordnungen & Wahrscheinlichkeit · Jahrgänge 2020–2024 · abgerufen 20.06.2026
+# Quelle: https://mathematik-wettbewerb.de/aufgabenauswahl
+# Hinweis: figurenabhängige Aufgaben (Geometrie/Symmetrie) sind NICHT enthalten.
+# ============================================================
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2020 · Gruppe A · Pflicht · **
+THEMA: Antiproportionale Zuordnungen
+DIFF: mittel
+F: Mit einer Treppe soll ein bestimmter Höhenunterschied h überwunden werden. Je nach gewählter Stufenhöhe wird hierfür eine unterschiedliche Anzahl gleich hoher Stufen benötigt. Wertetabelle — Stufenhöhe [in cm]: 18 | x | 15; Anzahl der Stufen: 20 | 30 | y. a) Berechne x und y. b) Berechne h.
+L: a) x = 12; y = 24. b) h = 360 cm (= 3,60 m). Ansatz: h = 18 cm · 20 = 360 cm; x = 360 : 30 = 12; y = 360 : 15 = 24.
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2021 · Gruppe A · Pflicht · **
+THEMA: Antiproportionale Zuordnungen
+DIFF: mittel
+F: Ein Futterautomat gibt täglich die gleiche Menge an Futter ab. Bei einer täglichen Abgabe von 120 g reicht der Vorrat 25 Tage. Wertetabelle — tägliche Menge in g: 120 | 60 | 150 | c; Anzahl der Tage: 25 | a | b | 40. Bestimme die Werte von a, b und c.
+L: a = 50; b = 20; c = 75. Ansatz: Vorrat = 120 g · 25 = 3000 g; a = 3000 : 60; b = 3000 : 150; c = 3000 : 40.
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2023 · Gruppe A · Pflicht · **
+THEMA: Antiproportionale Zuordnungen
+DIFF: mittel
+F: Eine (leere) Regentonne füllt sich bei einem Zufluss von 5 Liter pro Minute in 90 Minuten (Füllzeit). a) Bestimme die Füllzeit dieser (leeren) Regentonne bei einem Zufluss von 10 Liter pro Minute. b) Bestimme den Zufluss pro Minute bei einer Füllzeit von 18 Minuten.
+L: a) 45 min (die Regentonne fasst 450 Liter). b) 25 Liter pro Minute (450 Liter : 18 min).
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2024 · Gruppe A · Pflicht · **
+THEMA: Antiproportionale Zuordnungen
+DIFF: mittel
+F: Pauls Schulweg ist 1,2 km lang. Er geht zu Fuß. Morgens startet er um 7:15 Uhr und kommt um 7:35 Uhr an. a) Bestimme seine durchschnittliche Laufgeschwindigkeit in km pro Stunde. b) Mittags nach dem Unterricht hat er nur noch 2/3 seiner morgendlichen Geschwindigkeit. Wie viele Minuten braucht er dann für seinen Heimweg?
+L: a) 3,6 km/h (Laufzeit 20 min). b) 30 min (2/3 von 3,6 km/h sind 2,4 km/h; 1,2 km : 2,4 km/h = 1/2 h = 30 min).
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2021 · Gruppe A · Pflicht · **
+THEMA: Proportionale Zuordnungen
+DIFF: mittel
+F: Auf einer Weihnachtsdose mit Zimtsternen steht: „60 g mehr Inhalt!". Diese Dose enthält nun 24 statt bisher 20 Zimtsterne und wiegt insgesamt 410 g. a) Wie viel Gramm wiegt ein Zimtstern? b) Wie viel Gramm wiegt die leere Dose?
+L: a) 15 g (60 g mehr = 4 zusätzliche Sterne → 60 g : 4 = 15 g). b) 50 g (24 Zimtsterne wiegen 360 g; 410 g − 360 g).
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2022 · Gruppe A · Pflicht · **
+THEMA: Proportionale Zuordnungen
+DIFF: mittel
+F: Ein kleiner Fahrradreifen legt durch eine bestimmte Anzahl von Umdrehungen eine bestimmte Strecke zurück (siehe Tabelle). Wertetabelle — Umdrehungen: 140 | 20 | u; Strecke (in m): 210 | s | 303. a) Gib die Werte für s und u an. b) Welche Strecke legt der Reifen bei einer Umdrehung zurück?
+L: a) s = 30 m; u = 202. b) 1,50 m (210 m : 140 = 1,5 m pro Umdrehung).
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2023 · Gruppe A · Pflicht · *
+THEMA: Proportionale Zuordnungen
+DIFF: leicht
+F: Beim Adventsmarkt verkauft die Klasse 8a selbstgemachte Futterknödel für Vögel (alle zum gleichen Stückpreis). Gegeben ist das Wertepaar 5 Knödel ↔ 6,50 €. a) Wie viel kosten 8 Knödel? b) Wie viele Knödel bekommt man für 3,90 €? c) Finde ein neues Wertepaar.
+L: a) 10,40 € (Stückpreis 1,30 €; 8 · 1,30 €). b) 3 Knödel (3,90 € : 1,30 €). c) z. B. 10 Knödel kosten 13,00 €.
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2023 · Gruppe A · Pflicht · ***
+THEMA: Proportionale Zuordnungen
+DIFF: schwer
+F: In Europa werden Temperaturen in „Grad Celsius" (°C) angegeben, während in den USA die Maßeinheit „Grad Fahrenheit" (°F) üblich ist. Zur Umrechnung zwischen den beiden Temperaturskalen wird die Formel T_F = 9/5 · T_C + 32 benutzt; dabei ist T_F die Temperatur in °F und T_C die Temperatur in °C. a) Wie viel °F entsprechen 30 °C? b) Wie viel °C entsprechen 5 °F? (Auch als Thema „Einheiten" gelistet.)
+L: a) 86 °F (9/5 · 30 + 32 = 86). b) −15 °C (5 = 9/5 · T_C + 32 → 9/5 · T_C = −27 → T_C = −27 · 5/9 = −15).
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2020 · Gruppe A · Pflicht · **
+THEMA: Wahrscheinlichkeitsrechnung
+DIFF: mittel
+F: Tom öffnet die von 1 bis 24 durchnummerierten Türen seines Adventskalenders nach dem Zufallsprinzip. Dazu macht er ab dem 1. Dezember jeden Tag eine bisher ungeöffnete Tür auf, ganz egal, ob die Zahl zum Datum passt. a) Bestimme die Wahrscheinlichkeit dafür, dass am 1. Dezember eine gerade Zahl auf der geöffneten Tür steht. b) Berechne die Wahrscheinlichkeit dafür, dass am 1. und am 2. Dezember jeweils eine durch 3 teilbare Zahl auf den geöffneten Türen steht. (Ergebnisse können als Produkt, Summe oder Potenz angegeben werden.)
+L: a) 12/24 = 1/2. b) 8/24 · 7/23 = 7/69.
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2021 · Gruppe A · Pflicht · **
+THEMA: Wahrscheinlichkeitsrechnung
+DIFF: mittel
+F: Alexandra hat zum Geburtstag Lollis mitgebracht. In einem Beutel befinden sich 5 Cola-Lollis, 3 Kirsch-Lollis und 2 Apfel-Lollis. Simon möchte aus diesem Beutel zufällig nacheinander zwei Lollis ziehen. Bestimme die Wahrscheinlichkeit dafür, dass Simon a) zwei Cola-Lollis, b) einen Kirsch-Lolli und einen Apfel-Lolli zieht. (Ergebnisse können als Produkt, Summe oder Potenz angegeben werden.)
+L: a) 5/10 · 4/9 = 2/9. b) 2 · 3/10 · 2/9 = 2/15.
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2023 · Gruppe A · Pflicht · **
+THEMA: Wahrscheinlichkeitsrechnung
+DIFF: mittel
+F: Max wirft an jedem Morgen einen Blick auf sein Vogelfutterhäuschen. Nach mehreren Wochen hat er festgestellt: Die Wahrscheinlichkeit, dabei Spatzen zu sehen, beträgt 7/10, für Meisen beträgt sie 1/5. Wie groß ist dann die Wahrscheinlichkeit, morgens a) keine Spatzen, b) Spatzen, aber keine Meisen zu sehen? (Ergebnisse können als Produkt, Summe oder Potenz angegeben werden.)
+L: a) 3/10 (= 0,3). b) 7/10 · 4/5 = 14/25.
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2024 · Gruppe A · Pflicht · **
+THEMA: Wahrscheinlichkeitsrechnung
+DIFF: mittel
+F: In einem Skat-Spiel mit 32 Karten befinden sich je acht Karten mit Kreuz, Pik, Herz oder Karo. Es werden zwei Karten zufällig nacheinander ohne Zurücklegen gezogen. Wie groß ist die Wahrscheinlichkeit, dass a) beide Karten Herz zeigen, b) eine Karte Kreuz und eine Karte Herz zeigt? (Ergebnisse können als Produkt, Summe oder Potenz angegeben werden.)
+L: a) 8/32 · 7/31. b) 2 · 8/32 · 8/31.
+
+# ============================================================
+# Import (Figuren): Math.-Wettbewerb Hessen · 1. Runde · Gruppe A · Pflicht
+# Figurenabhängige Aufgaben mit BILD:-Verweis · Jahrgänge 2020–2024
+# Quelle: https://mathematik-wettbewerb.de/aufgabenauswahl
+# ============================================================
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2020 · Gruppe A · Pflicht · 
+THEMA: Flächen und Körper
+DIFF: mittel
+F: cm2 Von dem Trapez ABCD mit dem Fl¨acheninhalt 21 wird das Dreieck 4 cm PBC (wie in der Skizze abgebildet) abgeschnitten. a) Bestimme den Fl¨acheninhalt des Dreiecks PBC. 4 cm b) Wie lang ist die Strecke AP? (Zeichnung nicht maßstabsgetreu) A P 3,5 cm B
+BILD: bilder/2020-A-P8-flaechen-koerper.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2021 · Gruppe A · Pflicht · 
+THEMA: Flächen und Körper
+DIFF: mittel
+F: Gib f¨ur die nebenstehende Figur einen Term an f¨ur die Berechnung der Gr¨oße a) des Umfangs, 3a 3a b) des Fl¨acheninhalts. a a b b
+BILD: bilder/2021-A-P8-flaechen-koerper.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2022 · Gruppe A · Pflicht · 
+THEMA: Flächen und Körper
+DIFF: mittel
+F: ∧= In einem Koordinatensystem (1 LE 1 cm) ist das Viereck ABCD D C (3|4) 4 eingezeichnet. 3 a) Bestimme den Fl¨acheninhalt des Vierecks ABCD. 2 b) Der Punkt B wird auf der x-Achse verschoben. Bestimme 1 B∗(x|0) die x-Koordinate des Punktes so, dass das Viereck B AB∗CD cm2 x einen Fl¨acheninhalt von 15 hat. A 1 2 3 4 5 6
+BILD: bilder/2022-A-P8-koordinaten-viereck.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2023 · Gruppe A · Pflicht · 
+THEMA: Flächen und Körper
+DIFF: mittel
+F: Die dargestellte Figur besteht aus drei kongruenten, gleichschenklig- cm2. rechtwinkligen Dreiecken. Der Fl¨acheninhalt der Gesamtfigur betr¨agt 216 Bestimme die Seitenl¨ange a. a
+BILD: bilder/2023-A-P8-kongruente-dreiecke.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2024 · Gruppe A · Pflicht · 
+THEMA: Flächen und Körper
+DIFF: mittel
+F: Ein Quadernetz hat die angegebenen L¨angen. b c Berechne das Volumen des Quaders. cm cm 4 6 = a
+BILD: bilder/2024-A-P7-quadernetz.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2024 · Gruppe A · Pflicht · 
+THEMA: Flächen und Körper
+DIFF: mittel
+F: Die Maße einiger Seiten der Figur ABCDEF sind angegeben (in cm). a) Berechne den Fl¨acheninhalt des Vierecks ABCD. D C b) Lena behauptet, dass die Strecke AD den Fl¨acheninhalt der Figur 7 2 ABCDEF halbiert. Begr¨unde, dass sie nicht recht hat. Formuliere 4 einen Antwortsatz. A B 5
+BILD: bilder/2024-A-P8-figur-abcdef.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2020 · Gruppe A · Pflicht · 
+THEMA: Symmetrie
+DIFF: mittel
+F: Welche der folgenden Figuren (1) bis (5) a) sind achsensymmetrisch, b) sind punktsymmetrisch, (1) (2) (3) (4) (5) c) haben mehr als eine Symmetrieachse?
+BILD: bilder/2020-A-P6-symmetrie-figuren.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2021 · Gruppe A · Pflicht · 
+THEMA: Symmetrie
+DIFF: mittel
+F: Welche der nebenstehenden Abbildungen von Babyspielzeugen a) sind achsensymmetrisch, b) sind punktsymmetrisch, c) haben mehr als eine Symmetrieachse? (1) (2) (3) (4) (5)
+BILD: bilder/2021-A-P5-babyspielzeug.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2022 · Gruppe A · Pflicht · 
+THEMA: Symmetrie
+DIFF: mittel
+F: Welche der abgebildeten Emojis a) sind achsensymmetrisch, b) sind punktsymmetrisch, aber nicht achsensymmetrisch, (1) (2) (3) (4) (5) c) haben mehr als eine Symme- trieachse?
+BILD: bilder/2022-A-P7-emojis.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2023 · Gruppe A · Pflicht · 
+THEMA: Symmetrie
+DIFF: mittel
+F: Welche dieser W¨aschesymbole sind (1) (2) (3) (4) (5) a) achsensymmetrisch, b) achsensymmetrisch und punktsymmetrisch, c) punktsymmetrisch, aber nicht achsensymmetrisch?
+BILD: bilder/2023-A-P5-waeschesymbole.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2024 · Gruppe A · Pflicht · 
+THEMA: Symmetrie
+DIFF: mittel
+F: Welche dieser Symbole von Spielkarten (1) (2) (3) (4) (5) (6) a) sind achsensymmetrisch, b) haben mehr als zwei Symmetrieachsen,
+BILD: bilder/2024-A-P5-spielkartensymbole.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2020 · Gruppe A · Pflicht · 
+THEMA: Winkel in Figuren
+DIFF: mittel
+F: In der nebenstehenden Zeichnung sind die Geraden g||h g und h parallel. Bestimme die Gr¨oßen der Winkel α, β und γ. b 70 g g a 80 h
+BILD: bilder/2020-A-P4-parallelen-winkel.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2021 · Gruppe A · Pflicht · 
+THEMA: Winkel in Figuren
+DIFF: mittel
+F: |DA| |BD|. Im nebenstehenden Dreieck ABC gilt = Bestimme die Gr¨oßen der Winkel α, β und δ. 85 D d a 118 b A B
+BILD: bilder/2021-A-P3-dreieck-winkel.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2022 · Gruppe A · Pflicht · 
+THEMA: Winkel in Figuren
+DIFF: mittel
+F: Das Dreieck PQR ist gleichschenklig mit |PR| = |RQ|. R Bestimme die Gr¨oßen der Winkel α, β und γ. a g 68 b P Q
+BILD: bilder/2022-A-P5-gleichschenklig.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2023 · Gruppe A · Pflicht · 
+THEMA: Winkel in Figuren
+DIFF: mittel
+F: In der nebenstehenden Abbildung ist g||h und wγ die Winkel- C halbierende von γ. Bestimme die Gr¨oße der Winkel α, β und δ. 50 B' A' h 125 b D B g a d A wg
+BILD: bilder/2023-A-P3-winkelhalbierende.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2024 · Gruppe A · Pflicht · 
+THEMA: Winkel in Figuren
+DIFF: mittel
+F: In der nebenstehenden Abbildung ist g||h. Bestimme die g b Gr¨oße der Winkel α, β und γ. h C 35 B A 65 g
+BILD: bilder/2024-A-P3-parallelen-winkel.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
+
+# Quelle: Math.-Wettbewerb Hessen · 1. Runde 2022 · Gruppe A · Pflicht · 
+THEMA: Wahrscheinlichkeitsrechnung
+DIFF: mittel
+F: Die nebenstehende Abbildung zeigt das Netz eines besonderen Spielw¨urfels. Gib jeweils die Wahrscheinlichkeit f¨ur die folgenden Ereignisse an: a) Beim einmaligen Werfen f¨allt die Augenzahl 3. b) Beim zweimaligen Werfen f¨allt erst eine 3, dann eine 5. c) Beim zweimaligen Werfen ist die Augensumme 8. (Beachte: Die Ergebnisse k¨onnen als Produkt, Summe oder Potenz angegeben wer- den.)
+BILD: bilder/2022-A-P6-wuerfelnetz.png
+L: (Lösung im PDF nicht gefunden – bitte ergänzen)
